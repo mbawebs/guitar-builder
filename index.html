@@ -865,11 +865,24 @@ function buildOptionCards(cat, body){
     card.appendChild(meta);
 
     card.onclick = ()=>{
-      state[cat] = opt.id;
-      if(opt.id !== "none") state.visible[cat] = true;
-      setLayer(cat);
-      buildControls();
-    };
+  const controlsBox = document.getElementById("controls");
+  const savedPanelScroll = controlsBox.scrollTop;
+  const savedPageScroll = window.scrollY || document.documentElement.scrollTop || 0;
+
+  state[cat] = opt.id;
+
+  if(opt.id !== "none"){
+    state.visible[cat] = true;
+  }
+
+  setLayer(cat);
+  buildControls();
+
+  requestAnimationFrame(()=>{
+    controlsBox.scrollTop = savedPanelScroll;
+    window.scrollTo(0, savedPageScroll);
+  });
+};
 
     grid.appendChild(card);
   });
