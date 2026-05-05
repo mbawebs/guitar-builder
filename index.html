@@ -7,21 +7,14 @@
 
 <style>
 :root{
-  --bg:#05070b;
-  --panel:#0c111a;
-  --soft:#121928;
-  --soft2:#182133;
-  --border:#2d3b52;
-  --text:#f6fbff;
-  --muted:#93a4b8;
+  --bg:#07090c;
+  --panel:#12161d;
+  --soft:#171c24;
+  --border:#28313d;
+  --text:#f4f7fb;
+  --muted:#9aa6b2;
   --accent:#45ff9a;
-  --accent2:#7c4dff;
-  --hot:#ff3df2;
-  --gold:#ffd166;
-  --danger:#ff375f;
-  --accentSoft:rgba(69,255,154,.18);
-  --purpleSoft:rgba(124,77,255,.24);
-  --pinkSoft:rgba(255,61,242,.18);
+  --accentSoft:rgba(69,255,154,.16);
 }
 
 *{box-sizing:border-box}
@@ -32,61 +25,40 @@ body{
   font-family:Inter,Arial,sans-serif;
   color:var(--text);
   background:
-    radial-gradient(circle at 18% 12%,rgba(69,255,154,.18),transparent 25%),
-    radial-gradient(circle at 88% 18%,rgba(124,77,255,.24),transparent 28%),
-    radial-gradient(circle at 64% 88%,rgba(255,61,242,.13),transparent 30%),
-    linear-gradient(180deg,#030407,var(--bg));
-  overflow-x:hidden;
-}
-
-body:before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background:
-    linear-gradient(115deg,transparent 0%,rgba(255,255,255,.05) 42%,transparent 44%),
-    radial-gradient(circle at center,transparent 0 55%,rgba(0,0,0,.34));
-  opacity:.9;
+    radial-gradient(circle at 20% 10%,rgba(69,255,154,.13),transparent 30%),
+    linear-gradient(180deg,#05070a,var(--bg));
 }
 
 .app{
   min-height:100vh;
   display:grid;
-  grid-template-columns:370px 1fr;
+  grid-template-columns:330px 1fr;
   gap:16px;
   padding:14px;
-  position:relative;
-  z-index:1;
 }
 
 .sidebar{
-  background:linear-gradient(180deg,rgba(17,24,39,.98),rgba(7,10,16,.96));
-  border:1px solid rgba(112,133,163,.35);
-  border-radius:24px;
+  background:rgba(18,22,29,.96);
+  border:1px solid var(--border);
+  border-radius:18px;
   overflow:hidden;
   display:flex;
   flex-direction:column;
   max-height:calc(100vh - 28px);
-  box-shadow:0 24px 80px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.08);
 }
 
 .brand{
   padding:18px;
-  border-bottom:1px solid rgba(255,255,255,.08);
+  border-bottom:1px solid var(--border);
   display:flex;
   justify-content:space-between;
   align-items:center;
-  background:
-    linear-gradient(135deg,rgba(69,255,154,.14),transparent 45%),
-    linear-gradient(225deg,rgba(124,77,255,.20),transparent 48%);
 }
 
 .brand h1{
   margin:0;
-  font-size:20px;
-  letter-spacing:.13em;
-  text-shadow:0 0 22px rgba(69,255,154,.35);
+  font-size:18px;
+  letter-spacing:.14em;
 }
 
 .brand span{
@@ -95,49 +67,12 @@ body:before{
 }
 
 .beta{
-  background:linear-gradient(135deg,var(--accent),#c8ff4d);
+  background:var(--accent);
   color:#06100a;
   padding:8px 12px;
   border-radius:999px;
-  font-weight:1000;
+  font-weight:900;
   font-size:12px;
-  box-shadow:0 0 25px rgba(69,255,154,.45);
-}
-
-.gameTabs{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:9px;
-  padding:14px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-
-.tabBtn{
-  border:1px solid rgba(255,255,255,.12);
-  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
-  color:var(--text);
-  border-radius:16px;
-  padding:12px 10px;
-  margin:0;
-  cursor:pointer;
-  font-weight:1000;
-  letter-spacing:.05em;
-  font-size:11px;
-  transition:.18s ease;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
-}
-
-.tabBtn:hover{
-  transform:translateY(-1px);
-  border-color:rgba(69,255,154,.6);
-  box-shadow:0 0 22px rgba(69,255,154,.14), inset 0 1px 0 rgba(255,255,255,.12);
-}
-
-.tabBtn.active{
-  background:linear-gradient(135deg,rgba(69,255,154,.95),rgba(124,77,255,.85));
-  color:#06100a;
-  border-color:rgba(255,255,255,.45);
-  box-shadow:0 0 30px rgba(69,255,154,.28);
 }
 
 .controls{
@@ -145,23 +80,16 @@ body:before{
   overflow:auto;
 }
 
-.controls::-webkit-scrollbar{width:8px}
-.controls::-webkit-scrollbar-thumb{background:#2a3850;border-radius:20px}
-
 .section{
-  background:
-    linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025)),
-    var(--soft);
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:20px;
+  background:var(--soft);
+  border:1px solid var(--border);
+  border-radius:16px;
   margin-bottom:12px;
   overflow:hidden;
-  box-shadow:0 14px 35px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.07);
 }
 
 .section.open{
-  border-color:rgba(69,255,154,.50);
-  box-shadow:0 0 24px rgba(69,255,154,.10), inset 0 1px 0 rgba(255,255,255,.1);
+  border-color:rgba(69,255,154,.45);
 }
 
 .sectionHead{
@@ -170,12 +98,11 @@ body:before{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  background:linear-gradient(90deg,rgba(69,255,154,.08),transparent 50%);
 }
 
 .sectionHead strong{
   font-size:13px;
-  letter-spacing:.1em;
+  letter-spacing:.08em;
 }
 
 .sectionHead small{
@@ -183,12 +110,6 @@ body:before{
   color:var(--muted);
   margin-top:4px;
   font-size:11px;
-}
-
-.chev{
-  color:var(--accent);
-  font-size:18px;
-  text-shadow:0 0 16px rgba(69,255,154,.5);
 }
 
 .sectionBody{
@@ -199,126 +120,31 @@ body:before{
 
 .label{
   color:var(--muted);
-  font-size:10px;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  font-weight:900;
-}
-
-.cardGrid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-}
-
-.optionCard{
-  min-height:74px;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:16px;
-  background:
-    radial-gradient(circle at 80% 18%,rgba(69,255,154,.12),transparent 36%),
-    linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.025));
-  color:var(--text);
-  padding:9px;
-  margin:0;
-  cursor:pointer;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  text-align:left;
-  overflow:hidden;
-  position:relative;
-  transition:.18s ease;
-}
-
-.optionCard:before{
-  content:"";
-  position:absolute;
-  inset:-40% -80%;
-  background:linear-gradient(110deg,transparent 42%,rgba(255,255,255,.16),transparent 58%);
-  transform:translateX(-40%);
-  opacity:0;
-}
-
-.optionCard:hover{
-  transform:translateY(-2px) scale(1.015);
-  border-color:rgba(69,255,154,.65);
-  box-shadow:0 0 24px rgba(69,255,154,.13);
-}
-
-.optionCard:hover:before{
-  opacity:1;
-  animation:shine .8s ease;
-}
-
-.optionCard.active{
-  border-color:var(--accent);
-  background:
-    radial-gradient(circle at 80% 18%,rgba(69,255,154,.30),transparent 38%),
-    linear-gradient(135deg,rgba(69,255,154,.20),rgba(124,77,255,.14));
-  box-shadow:0 0 26px rgba(69,255,154,.18), inset 0 0 0 1px rgba(255,255,255,.08);
-}
-
-.optionCard.noneCard{
-  border-style:dashed;
-  opacity:.85;
-}
-
-.optionName{
   font-size:11px;
-  font-weight:1000;
-  letter-spacing:.04em;
-  line-height:1.15;
-  position:relative;
-  z-index:2;
+  letter-spacing:.1em;
+  text-transform:uppercase;
 }
 
-.optionMeta{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  color:var(--muted);
-  font-size:10px;
-  font-weight:900;
-  position:relative;
-  z-index:2;
+select{
+  width:100%;
+  color:white;
+  background:#0d1117;
+  border:1px solid #2a3442;
+  border-radius:12px;
+  padding:12px;
+  outline:none;
+  font-weight:700;
 }
 
-.swatch{
-  width:24px;
-  height:24px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,.35);
-  box-shadow:0 0 16px rgba(255,255,255,.12), inset 0 1px 5px rgba(255,255,255,.28);
-  flex:0 0 auto;
+select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 4px var(--accentSoft);
 }
-
-.swatch.white{background:#f5f5ee}
-.swatch.black{background:#050505}
-.swatch.slime{background:#69ff31}
-.swatch.teal{background:#00d6cf}
-.swatch.pink{background:#ff4fc1}
-.swatch.red{background:#ff243e}
-.swatch.blue{background:#2d72ff}
-.swatch.purple{background:#8a4dff}
-.swatch.yellow{background:#ffd800}
-.swatch.orange{background:#ff7a18}
-.swatch.chrome{background:linear-gradient(135deg,#f8fbff,#77828f 45%,#ffffff 56%,#424a52)}
-.swatch.gold{background:linear-gradient(135deg,#fff2a3,#c9901d 45%,#ffe58a 60%,#8b5f0d)}
-.swatch.maple24,.swatch.maple22{background:#d8b06c}
-.swatch.rose24,.swatch.rose22{background:#5b2f22}
-.swatch.ebony24,.swatch.ebony22{background:#111}
-.swatch.none{background:repeating-linear-gradient(45deg,#202736,#202736 4px,#333d52 4px,#333d52 8px)}
 
 .toggleRow{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  background:rgba(255,255,255,.045);
-  border:1px solid rgba(255,255,255,.08);
-  padding:10px;
-  border-radius:16px;
 }
 
 .toggle{
@@ -326,74 +152,67 @@ body:before{
   align-items:center;
   gap:8px;
   font-size:11px;
-  font-weight:1000;
+  font-weight:900;
   color:var(--muted);
 }
 
-.toggle input{display:none}
+.toggle input{
+  display:none;
+}
 
 .switchUI{
-  width:54px;
-  height:30px;
+  width:48px;
+  height:26px;
   border-radius:999px;
   background:#2b3340;
   border:1px solid #3b4656;
   position:relative;
-  transition:.2s;
 }
 
 .switchUI:after{
   content:"";
-  width:20px;
-  height:20px;
+  width:18px;
+  height:18px;
   border-radius:50%;
   background:#c8d0d9;
   position:absolute;
-  top:4px;
-  left:4px;
+  top:3px;
+  left:3px;
   transition:.2s;
 }
 
 .toggle input:checked + .switchUI{
-  background:linear-gradient(135deg,rgba(69,255,154,.35),rgba(124,77,255,.26));
+  background:var(--accentSoft);
   border-color:var(--accent);
-  box-shadow:0 0 22px rgba(69,255,154,.22);
 }
 
 .toggle input:checked + .switchUI:after{
-  transform:translateX(24px);
+  transform:translateX(22px);
   background:var(--accent);
-  box-shadow:0 0 18px rgba(69,255,154,.72);
 }
 
 .footer{
   padding:14px;
-  border-top:1px solid rgba(255,255,255,.08);
-  background:rgba(0,0,0,.18);
+  border-top:1px solid var(--border);
 }
 
 button{
   width:100%;
   border:0;
-  border-radius:16px;
-  padding:14px;
+  border-radius:14px;
+  padding:13px;
   margin-bottom:10px;
-  background:linear-gradient(135deg,var(--accent),#b7ff4d);
+  background:var(--accent);
   color:#06100a;
-  font-weight:1000;
+  font-weight:900;
   letter-spacing:.08em;
   cursor:pointer;
-  box-shadow:0 0 26px rgba(69,255,154,.22);
-  transition:.18s ease;
 }
 
-button:hover{transform:translateY(-1px) scale(1.01)}
-
 button.secondary{
-  background:linear-gradient(180deg,#283348,#161d2a);
+  background:#222a35;
   color:white;
-  border:1px solid #3b4a64;
-  box-shadow:none;
+  border:1px solid #354052;
 }
 
 .hint{
@@ -405,42 +224,18 @@ button.secondary{
 .stage{
   position:relative;
   min-height:calc(100vh - 28px);
-  border:1px solid rgba(112,133,163,.35);
-  border-radius:24px;
+  border:1px solid var(--border);
+  border-radius:18px;
   overflow:hidden;
   display:flex;
   align-items:center;
   justify-content:center;
   background:
-    linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px),
-    linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),
-    radial-gradient(circle at 50% 50%,rgba(69,255,154,.13),transparent 34%),
-    radial-gradient(circle at 72% 28%,rgba(124,77,255,.20),transparent 32%),
-    #06090f;
-  background-size:52px 52px,52px 52px,auto,auto,auto;
-  box-shadow:inset 0 0 90px rgba(0,0,0,.55);
-}
-
-.stage:before{
-  content:"";
-  position:absolute;
-  width:70vw;
-  height:70vw;
-  border-radius:50%;
-  background:conic-gradient(from 90deg,rgba(69,255,154,.0),rgba(69,255,154,.18),rgba(124,77,255,.18),rgba(255,61,242,.10),rgba(69,255,154,.0));
-  filter:blur(40px);
-  opacity:.65;
-  animation:slowSpin 14s linear infinite;
-}
-
-.stage:after{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:linear-gradient(transparent 50%,rgba(255,255,255,.035) 51%);
-  background-size:100% 8px;
-  opacity:.22;
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    radial-gradient(circle at center,rgba(255,255,255,.08),transparent 55%),
+    #080b0f;
+  background-size:48px 48px,48px 48px,auto,auto;
 }
 
 .watermark{
@@ -456,51 +251,21 @@ button.secondary{
   font-size:70px;
   line-height:.85;
   letter-spacing:.12em;
-  color:rgba(255,255,255,.06);
-  text-shadow:0 0 40px rgba(69,255,154,.12);
+  color:rgba(255,255,255,.055);
 }
 
 .watermark p{
   margin:8px 0 0;
-  color:rgba(255,255,255,.30);
+  color:rgba(255,255,255,.26);
   font-size:12px;
   letter-spacing:.28em;
 }
 
-.statusPill{
-  position:absolute;
-  right:24px;
-  top:24px;
-  z-index:3;
-  color:#07100a;
-  background:linear-gradient(135deg,var(--accent),var(--gold));
-  border-radius:999px;
-  padding:10px 14px;
-  font-size:12px;
-  font-weight:1000;
-  letter-spacing:.08em;
-  box-shadow:0 0 30px rgba(69,255,154,.30);
-}
-
 .guitarWrap{
   position:relative;
-  width:min(58vw,640px);
-  height:min(94vh,1040px);
+  width:min(52vw,560px);
+  height:min(92vh,980px);
   z-index:2;
-  filter:drop-shadow(0 42px 45px rgba(0,0,0,.65)) drop-shadow(0 0 28px rgba(69,255,154,.11));
-  animation:floatGuitar 4.8s ease-in-out infinite;
-}
-
-.guitarWrap:after{
-  content:"";
-  position:absolute;
-  left:15%;
-  right:15%;
-  bottom:6%;
-  height:7%;
-  background:radial-gradient(ellipse at center,rgba(0,0,0,.72),transparent 70%);
-  filter:blur(12px);
-  z-index:-1;
 }
 
 .guitarLayer{
@@ -510,16 +275,13 @@ button.secondary{
   height:100%;
   object-fit:contain;
   pointer-events:none;
-  transition:opacity .16s ease, filter .16s ease;
 }
 
 .layer-body{z-index:10}
 .layer-neck{z-index:20}
 .layer-headstock{z-index:25}
 .layer-nut{z-index:28}
-.layer-ring-neck{z-index:40}
-.layer-ring-middle{z-index:41}
-.layer-ring-bridge{z-index:42}
+.layer-rings{z-index:40}
 .layer-pickup-neck{z-index:50}
 .layer-pickup-middle{z-index:51}
 .layer-pickup-bridge{z-index:52}
@@ -529,26 +291,12 @@ button.secondary{
 
 .hidden{display:none}
 
-@keyframes shine{
-  to{transform:translateX(40%)}
-}
-
-@keyframes slowSpin{
-  to{transform:rotate(360deg)}
-}
-
-@keyframes floatGuitar{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-10px)}
-}
-
 @media(max-width:900px){
   .app{grid-template-columns:1fr}
   .stage{min-height:60vh}
-  .sidebar{max-height:none;order:2}
-  .guitarWrap{width:92vw;height:62vh}
+  .sidebar{max-height:none}
+  .guitarWrap{width:86vw;height:58vh}
   .watermark h2{font-size:46px}
-  .statusPill{right:14px;top:14px;font-size:10px}
 }
 </style>
 </head>
@@ -564,32 +312,27 @@ button.secondary{
       <div class="beta">BETA</div>
     </div>
 
-    <div class="gameTabs" id="gameTabs"></div>
     <div class="controls" id="controls"></div>
 
     <div class="footer">
       <button id="randomBtn">RANDOMIZE BUILD</button>
       <button class="secondary" id="resetBtn">RESET</button>
-      <div class="hint">Game-style UI upgrade. Rings are now separate layers: neck, middle, bridge.</div>
+      <div class="hint">Layer order is controlled by code. PNG names must match exactly.</div>
     </div>
   </aside>
 
   <main class="stage">
     <div class="watermark">
-      <h2>SHRED</h2>
+      <h2>GUITAR</h2>
       <p>BUILD YOUR WEAPON</p>
     </div>
-    <div class="statusPill">LIVE BUILD</div>
 
-    <div class="guitarWrap" id="guitarWrap">
+    <div class="guitarWrap">
       <img class="guitarLayer layer-body hidden" data-layer="body">
       <img class="guitarLayer layer-neck hidden" data-layer="neck">
       <img class="guitarLayer layer-headstock hidden" data-layer="headstock">
       <img class="guitarLayer layer-nut hidden" data-layer="nut">
-
-      <img class="guitarLayer layer-ring-neck hidden" data-layer="ringNeck">
-      <img class="guitarLayer layer-ring-middle hidden" data-layer="ringMiddle">
-      <img class="guitarLayer layer-ring-bridge hidden" data-layer="ringBridge">
+      <img class="guitarLayer layer-rings hidden" data-layer="rings">
 
       <img class="guitarLayer layer-pickup-neck hidden" data-layer="pickupNeck">
       <img class="guitarLayer layer-pickup-middle hidden" data-layer="pickupMiddle">
@@ -628,6 +371,7 @@ const CATALOG = {
     {id:"maple24",label:"Maple 24 Fret",src:paths("neck","San-Dimas_0007s_0001s_0000_Hotrod-Maple-24-neck")},
     {id:"rose24",label:"Rosewood 24 Fret",src:paths("neck","San-Dimas_0007s_0001s_0001_Hotrod-Rosewood-24-neck")},
     {id:"ebony24",label:"Ebony 24 Fret",src:paths("neck","San-Dimas_0007s_0001s_0002_Hotrod-Ebony-24-neck")},
+
     {id:"maple22",label:"Maple 22 Fret",src:paths("neck","San-Dimas_0007s_0000s_0000_Hotrod-Maple-22-neck")},
     {id:"rose22",label:"Rosewood 22 Fret",src:paths("neck","San-Dimas_0007s_0000s_0001_Hotrod-Rosewood-22-neck")},
     {id:"ebony22",label:"Ebony 22 Fret",src:paths("neck","San-Dimas_0007s_0000s_0002_Hotrod-Ebony-22-neck")}
@@ -661,34 +405,32 @@ const CATALOG = {
     {id:"white",label:"Bridge HB White",src:paths("pickups","San-Dimas_0005s_0002_Hotrod-HB-Bridge-white")}
   ],
 
-  ringNeck:[
-    {id:"none",label:"No Neck Ring",src:""},
-    {id:"black",label:"Neck Ring Black",src:paths("rings","San-Dimas_0004s_0002s_0000_Hotrod-Ring-neck-black")},
-    {id:"chrome",label:"Neck Ring Chrome",src:paths("rings","San-Dimas_0004s_0001s_0000_Hotrod-Ring-Neck-chrome")},
-    {id:"gold",label:"Neck Ring Gold",src:paths("rings","San-Dimas_0004s_0000s_0000_Hotrod-Ring-Neck-gold")}
-  ],
-
-  ringMiddle:[
-    {id:"none",label:"No Middle Ring",src:""},
-    {id:"black",label:"Middle Ring Black",src:paths("rings","San-Dimas_0004s_0002s_0001_Hotrod-Ring-middle-black")},
-    {id:"chrome",label:"Middle Ring Chrome",src:paths("rings","San-Dimas_0004s_0001s_0001_Hotrod-Ring-Middle-chrome")},
-    {id:"gold",label:"Middle Ring Gold",src:paths("rings","San-Dimas_0004s_0000s_0001_Hotrod-Ring-Middle-gold")}
-  ],
-
-  ringBridge:[
-    {id:"none",label:"No Bridge Ring",src:""},
-    {id:"black",label:"Bridge Ring Black",src:paths("rings","San-Dimas_0004s_0002s_0002_Hotrod-Ring-Bridge-black")},
-    {id:"chrome",label:"Bridge Ring Chrome",src:paths("rings","San-Dimas_0004s_0001s_0002_Hotrod-Ring-bridge-chrome")},
-    {id:"gold",label:"Bridge Ring Gold",src:paths("rings","San-Dimas_0004s_0000s_0002_Hotrod-Ring-bridge-gold")}
+  rings:[
+    {id:"none",label:"No Rings",src:""},
+    {id:"black",label:"Black Rings",src:[
+      ...paths("rings","San-Dimas_0004s_0002s_0000_Hotrod-Ring-neck-black"),
+      ...paths("rings","San-Dimas_0004s_0002s_0001_Hotrod-Ring-middle-black"),
+      ...paths("rings","San-Dimas_0004s_0002s_0002_Hotrod-Ring-Bridge-black")
+    ]},
+    {id:"chrome",label:"Chrome Rings",src:[
+      ...paths("rings","San-Dimas_0004s_0001s_0000_Hotrod-Ring-Neck-chrome"),
+      ...paths("rings","San-Dimas_0004s_0001s_0001_Hotrod-Ring-Middle-chrome"),
+      ...paths("rings","San-Dimas_0004s_0001s_0002_Hotrod-Ring-bridge-chrome")
+    ]},
+    {id:"gold",label:"Gold Rings",src:[
+      ...paths("rings","San-Dimas_0004s_0000s_0000_Hotrod-Ring-Neck-gold"),
+      ...paths("rings","San-Dimas_0004s_0000s_0001_Hotrod-Ring-Middle-gold"),
+      ...paths("rings","San-Dimas_0004s_0000s_0002_Hotrod-Ring-bridge-gold")
+    ]}
   ],
 
   bridge:[
     {id:"fr-black",label:"Floyd Rose Black",src:[
-      ...paths("bridge","San-Dimas_0003s_0005_Hotrod-FR-hardware-black"),
-      ...paths("bridge","San-Dimas_0003s_0005_Hotrod-FR-Hardware-black"),
-      ...paths("bridge","San-Dimas_0003s_0005_Hotrod-FR-Harware-black"),
-      ...paths("bridge","San-Dimas_0003s_0005_Hotrod-FR-harware-black")
-    ]},
+  ...paths("bridge","San-Dimas_0003s_0005_Hotrod-FR-hardware-black"),
+  ...paths("bridge","San-Dimas_0003s_0005_Hotrod-FR-Hardware-black"),
+  ...paths("bridge","San-Dimas_0003s_0005_Hotrod-FR-Harware-black"),
+  ...paths("bridge","San-Dimas_0003s_0005_Hotrod-FR-harware-black"),
+   ]},
     {id:"fr-chrome",label:"Floyd Rose Chrome",src:paths("bridge","San-Dimas_0003s_0003_Hotrod-FR-hardware-chrome")},
     {id:"fr-gold",label:"Floyd Rose Gold",src:paths("bridge","San-Dimas_0003s_0001_Hotrod-FR-hardware-gold")},
     {id:"vt-black",label:"Vintage Trem Black",src:paths("bridge","San-Dimas_0003s_0004_Hotrod-VT-black")},
@@ -717,9 +459,7 @@ const DEFAULT_STATE = {
   pickupNeck:"black",
   pickupMiddle:"black",
   pickupBridge:"black",
-  ringNeck:"black",
-  ringMiddle:"black",
-  ringBridge:"black",
+  rings:"black",
   bridge:"fr-black",
   knobs:"black",
   switch:"black",
@@ -732,9 +472,7 @@ const DEFAULT_STATE = {
     pickupNeck:true,
     pickupMiddle:true,
     pickupBridge:true,
-    ringNeck:true,
-    ringMiddle:true,
-    ringBridge:true,
+    rings:true,
     bridge:true,
     knobs:true,
     switch:true
@@ -742,32 +480,21 @@ const DEFAULT_STATE = {
 };
 
 let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
-let activeGroup = "core";
-
-const groups = [
-  {id:"core",label:"🎸 CORE"},
-  {id:"pickups",label:"⚡ PICKUPS"},
-  {id:"rings",label:"💍 RINGS"},
-  {id:"hardware",label:"🔩 HARDWARE"}
-];
 
 const sections = [
-  ["body","BODY","Body colors",false,true,"core"],
-  ["neck","NECK","22 / 24 fret necks",false,true,"core"],
-  ["headstock","NATURAL HEADSTOCK","Independent ON/OFF",true,false,"core"],
-  ["nut","NUT","Locking nut options",true,false,"core"],
+  ["body","BODY","Body colors",false,true],
+  ["neck","NECK","22 / 24 fret necks",false,true],
+  ["headstock","NATURAL HEADSTOCK","Independent ON/OFF",true,false],
+  ["nut","NUT","Locking nut options",true,false],
 
-  ["pickupNeck","NECK PICKUP","Independent ON/OFF",true,true,"pickups"],
-  ["pickupMiddle","MIDDLE PICKUP","Independent ON/OFF",true,true,"pickups"],
-  ["pickupBridge","BRIDGE PICKUP","Independent ON/OFF",true,true,"pickups"],
+  ["pickupNeck","NECK PICKUP","Independent ON/OFF",true,true],
+  ["pickupMiddle","MIDDLE PICKUP","Independent ON/OFF",true,true],
+  ["pickupBridge","BRIDGE PICKUP","Independent ON/OFF",true,true],
 
-  ["ringNeck","NECK RING","Independent ON/OFF",true,true,"rings"],
-  ["ringMiddle","MIDDLE RING","Independent ON/OFF",true,true,"rings"],
-  ["ringBridge","BRIDGE RING","Independent ON/OFF",true,true,"rings"],
-
-  ["bridge","BRIDGE","FR / VT hardware",false,true,"hardware"],
-  ["knobs","KNOBS","Speed knobs",false,false,"hardware"],
-  ["switch","SWITCH","Blade switch colors",false,false,"hardware"]
+  ["rings","PICKUP RINGS","Set of rings",true,false],
+  ["bridge","BRIDGE","FR / VT hardware",false,false],
+  ["knobs","KNOBS","Speed knobs",false,false],
+  ["switch","SWITCH","Blade switch colors",false,false]
 ];
 
 function selectedItem(cat){
@@ -811,77 +538,11 @@ function render(){
   Object.keys(CATALOG).forEach(setLayer);
 }
 
-function swatchClass(id){
-  if(id.includes("fr-")) return id.replace("fr-","");
-  if(id.includes("vt-")) return id.replace("vt-","");
-  if(id.includes("maple")) return id;
-  if(id.includes("rose")) return id;
-  if(id.includes("ebony")) return id;
-  return id;
-}
-
-function buildTabs(){
-  const tabs = document.getElementById("gameTabs");
-  tabs.innerHTML = "";
-
-  groups.forEach(group=>{
-    const btn = document.createElement("button");
-    btn.className = "tabBtn" + (activeGroup === group.id ? " active" : "");
-    btn.textContent = group.label;
-    btn.onclick = ()=>{
-      activeGroup = group.id;
-      buildTabs();
-      buildControls();
-    };
-    tabs.appendChild(btn);
-  });
-}
-
-function buildOptionCards(cat, body){
-  const grid = document.createElement("div");
-  grid.className = "cardGrid";
-
-  CATALOG[cat].forEach(opt=>{
-    const card = document.createElement("button");
-    card.type = "button";
-    card.className = "optionCard" + (state[cat] === opt.id ? " active" : "") + (opt.id === "none" ? " noneCard" : "");
-
-    const name = document.createElement("div");
-    name.className = "optionName";
-    name.textContent = opt.label;
-
-    const meta = document.createElement("div");
-    meta.className = "optionMeta";
-
-    const metaText = document.createElement("span");
-    metaText.textContent = state[cat] === opt.id ? "SELECTED" : "TAP";
-
-    const swatch = document.createElement("span");
-    swatch.className = "swatch " + swatchClass(opt.id);
-
-    meta.appendChild(metaText);
-    meta.appendChild(swatch);
-    card.appendChild(name);
-    card.appendChild(meta);
-
-    card.onclick = ()=>{
-      state[cat] = opt.id;
-      if(opt.id !== "none") state.visible[cat] = true;
-      setLayer(cat);
-      buildControls();
-    };
-
-    grid.appendChild(card);
-  });
-
-  body.appendChild(grid);
-}
-
 function buildControls(){
   const box = document.getElementById("controls");
   box.innerHTML = "";
 
-  sections.filter(section=>section[5] === activeGroup).forEach(([cat,title,sub,hasToggle,open])=>{
+  sections.forEach(([cat,title,sub,hasToggle,open])=>{
     const sec = document.createElement("div");
     sec.className = "section" + (open ? " open" : "");
 
@@ -891,9 +552,9 @@ function buildControls(){
           <strong>${title}</strong>
           <small>${sub}</small>
         </div>
-        <span class="chev">⌄</span>
+        <span>⌄</span>
       </div>
-      <div class="sectionBody" style="display:${open ? "grid" : "none"}"></div>
+      <div class="sectionBody" style="display:${isOpen ? "grid" : "none"}"></div>
     `;
 
     const body = sec.querySelector(".sectionBody");
@@ -902,7 +563,7 @@ function buildControls(){
       const row = document.createElement("div");
       row.className = "toggleRow";
       row.innerHTML = `
-        <span class="label">POWER</span>
+        <span class="label">ON/OFF</span>
         <label class="toggle">
           <input type="checkbox" ${state.visible[cat] ? "checked" : ""}>
           <span class="switchUI"></span>
@@ -924,14 +585,31 @@ function buildControls(){
 
     const label = document.createElement("div");
     label.className = "label";
-    label.textContent = "Choose style";
+    label.textContent = title;
     body.appendChild(label);
 
-    buildOptionCards(cat, body);
+    const select = document.createElement("select");
+
+    CATALOG[cat].forEach(opt=>{
+      const o = document.createElement("option");
+      o.value = opt.id;
+      o.textContent = opt.label;
+      select.appendChild(o);
+    });
+
+    select.value = state[cat];
+
+    select.onchange = ()=>{
+      state[cat] = select.value;
+      setLayer(cat);
+    };
+
+    body.appendChild(select);
 
     sec.querySelector(".sectionHead").onclick = ()=>{
       sec.classList.toggle("open");
-      body.style.display = sec.classList.contains("open") ? "grid" : "none";
+      openSections[cat] = sec.classList.contains("open");
+      body.style.display = openSections[cat] ? "grid" : "none";
     };
 
     box.appendChild(sec);
@@ -940,8 +618,6 @@ function buildControls(){
 
 document.getElementById("resetBtn").onclick = ()=>{
   state = JSON.parse(JSON.stringify(DEFAULT_STATE));
-  activeGroup = "core";
-  buildTabs();
   buildControls();
   render();
 };
@@ -959,28 +635,12 @@ document.getElementById("randomBtn").onclick = ()=>{
   state.visible.pickupNeck = Math.random() > .15;
   state.visible.pickupMiddle = Math.random() > .35;
   state.visible.pickupBridge = true;
-  state.visible.ringNeck = Math.random() > .25;
-  state.visible.ringMiddle = Math.random() > .25;
-  state.visible.ringBridge = Math.random() > .25;
+  state.visible.rings = Math.random() > .25;
 
   buildControls();
   render();
 };
 
-const guitarWrap = document.getElementById("guitarWrap");
-document.querySelector(".stage").addEventListener("mousemove", e=>{
-  if(window.innerWidth < 900) return;
-  const rect = e.currentTarget.getBoundingClientRect();
-  const x = ((e.clientX - rect.left) / rect.width - .5) * 10;
-  const y = ((e.clientY - rect.top) / rect.height - .5) * -10;
-  guitarWrap.style.transform = `translateY(-6px) rotateX(${y}deg) rotateY(${x}deg)`;
-});
-
-document.querySelector(".stage").addEventListener("mouseleave", ()=>{
-  guitarWrap.style.transform = "";
-});
-
-buildTabs();
 buildControls();
 render();
 </script>
