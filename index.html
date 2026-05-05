@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Guitar Builder</title>
+<style>
+:root{
+  --bg:#07090c; --panel:#12161d; --soft:#171c24; --border:#28313d;
+  --text:#f4f7fb; --muted:#9aa6b2; --accent:#45ff9a; --accentSoft:rgba(69,255,154,.16);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; font-family:Inter,Arial,sans-serif; color:var(--text);
+  background:radial-gradient(circle at 20% 10%,rgba(69,255,154,.13),transparent 30%),linear-gradient(180deg,#05070a,var(--bg));
+}
+.app{min-height:100vh; display:grid; grid-template-columns:330px 1fr; gap:16px; padding:14px}
+.sidebar{background:rgba(18,22,29,.96); border:1px solid var(--border); border-radius:18px; overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 28px)}
+.brand{padding:18px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center}
+.brand h1{margin:0; font-size:18px; letter-spacing:.14em}
+.brand span{font-size:12px; color:var(--muted)}
+.beta{background:var(--accent); color:#06100a; padding:8px 12px; border-radius:999px; font-weight:900; font-size:12px}
+.controls{padding:14px; overflow:auto}
+.section{background:var(--soft); border:1px solid var(--border); border-radius:16px; margin-bottom:12px; overflow:hidden}
+.section.open{border-color:rgba(69,255,154,.45)}
+.sectionHead{padding:14px; cursor:pointer; display:flex; justify-content:space-between; align-items:center}
+.sectionHead strong{font-size:13px; letter-spacing:.08em}
+.sectionHead small{display:block; color:var(--muted); margin-top:4px; font-size:11px}
+.sectionBody{padding:0 14px 14px; display:grid; gap:10px}
+.label{color:var(--muted); font-size:11px; letter-spacing:.1em; text-transform:uppercase}
+select{width:100%; color:white; background:#0d1117; border:1px solid #2a3442; border-radius:12px; padding:12px; outline:none; font-weight:700}
+select:focus{border-color:var(--accent); box-shadow:0 0 0 4px var(--accentSoft)}
+.toggleRow{display:flex; align-items:center; justify-content:space-between}
+.toggle{display:flex; align-items:center; gap:8px; font-size:11px; font-weight:900; color:var(--muted)}
+.toggle input{display:none}
+.switchUI{width:48px; height:26px; border-radius:999px; background:#2b3340; border:1px solid #3b4656; position:relative}
+.switchUI:after{content:""; width:18px; height:18px; border-radius:50%; background:#c8d0d9; position:absolute; top:3px; left:3px; transition:.2s}
+.toggle input:checked + .switchUI{background:var(--accentSoft); border-color:var(--accent)}
+.toggle input:checked + .switchUI:after{transform:translateX(22px); background:var(--accent)}
+.footer{padding:14px; border-top:1px solid var(--border)}
+button{width:100%; border:0; border-radius:14px; padding:13px; margin-bottom:10px; background:var(--accent); color:#06100a; font-weight:900; letter-spacing:.08em; cursor:pointer}
+button.secondary{background:#222a35; color:white; border:1px solid #354052}
+.hint{color:var(--muted); font-size:11px; line-height:1.4}
+.stage{
+  position:relative; min-height:calc(100vh - 28px); border:1px solid var(--border); border-radius:18px; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),
+  linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+  radial-gradient(circle at center,rgba(255,255,255,.08),transparent 55%),#080b0f;
+  background-size:48px 48px,48px 48px,auto,auto;
+}
+.watermark{position:absolute; top:24px; left:28px; pointer-events:none; z-index:1}
+.watermark h2{margin:0; font-size:70px; line-height:.85; letter-spacing:.12em; color:rgba(255,255,255,.055)}
+.watermark p{margin:8px 0 0; color:rgba(255,255,255,.26); font-size:12px; letter-spacing:.28em}
+.guitarWrap{position:relative; width:min(52vw,560px); height:min(92vh,980px); z-index:2}
+.guitarLayer{position:absolute; inset:0; width:100%; height:100%; object-fit:contain; pointer-events:none}
+.body{z-index:10}.neck{z-index:20}.headstock{z-index:25}.nut{z-index:28}.rings{z-index:40}.pickups{z-index:50}.bridge{z-index:60}.knobs{z-index:70}.switch{z-index:80}
+.hidden{display:none}
+@media(max-width:900px){.app{grid-template-columns:1fr}.stage{min-height:60vh}.sidebar{max-height:none}.guitarWrap{width:86vw;height:58vh}.watermark h2{font-size:46px}}
+</style>
+</head>
+
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div><h1>GUITAR BUILDER</h1><span>Custom Guitar Configurator</span></div><div class="beta">BETA</div></div>
+    <div class="controls" id="controls"></div>
+    <div class="footer">
+      <button id="randomBtn">RANDOMIZE BUILD</button>
+      <button class="secondary" id="resetBtn">RESET</button>
+      <div class="hint">Layer order is controlled by code, not by file names.</div>
+    </div>
+  </aside>
+
+  <main class="stage">
+    <div class="watermark"><h2>GUITAR</h2><p>BUILD YOUR WEAPON</p></div>
+    <div class="guitarWrap">
+      <img class="guitarLayer body hidden" data-layer="body">
+      <img class="guitarLayer neck hidden" data-layer="neck">
+      <img class="guitarLayer headstock hidden" data-layer="headstock">
+      <img class="guitarLayer nut hidden" data-layer="nut">
+      <img class="guitarLayer rings hidden" data-layer="rings">
+      <img class="guitarLayer pickups hidden" data-layer="pickups">
+      <img class="guitarLayer bridge hidden" data-layer="bridge">
+      <img class="guitarLayer knobs hidden" data-layer="knobs">
+      <img class="guitarLayer switch hidden" data-layer="switch">
+    </div>
+  </main>
+</div>
+
+<script>
+function paths(folder, file){
+  return [`${folder}/${file}.png`, `assets/${folder}/${file}.png`];
+}
+
+const CATALOG = {
+  body:[
+    {id:"white",label:"White",src:paths("body","San-Dimas_0007s_0002s_0011_Hotrod-body-white")},
+    {id:"black",label:"Black",src:paths("body","San-Dimas_0007s_0002s_0012_Hotrod-body-black")},
+    {id:"slime",label:"Slime Green",src:paths("body","San-Dimas_0007s_0002s_0008_Hotrod-body-slim-green")},
+    {id:"teal",label:"Teal",src:paths("body","San-Dimas_0007s_0002s_0009_Hotrod-body-teal")},
+    {id:"pink",label:"Pink",src:paths("body","San-Dimas_0007s_0002s_0010_Hotrod-body-pink")},
+    {id:"red",label:"Red",src:paths("body","San-Dimas_0007s_0002s_0003_Hotrod-body-red")},
+    {id:"blue",label:"Blue",src:paths("body","San-Dimas_0007s_0002s_0005_Hotrod-body-blue")},
+    {id:"purple",label:"Purple",src:paths("body","San-Dimas_0007s_0002s_0004_Hotrod-body-purple")},
+    {id:"yellow",label:"Yellow",src:paths("body","San-Dimas_0007s_0002s_0006_Hotrod-body-yellow")},
+    {id:"orange",label:"Solar Orange",src:paths("body","San-Dimas_0007s_0002s_0007_Hotrod-body-solar-orange")}
+  ],
+  neck:[
+    {id:"maple24",label:"Maple 24 Fret",src:paths("neck","San-Dimas_0007s_0001s_0000_Hotrod-Maple-24-neck")},
+    {id:"maple22",label:"Maple 22 Fret",src:paths("neck","San-Dimas_0003s_0000_Hotrod-Maple-22-neck")},
+    {id:"rose24",label:"Rosewood 24 Fret",src:paths("neck","San-Dimas_0007s_0001s_0001_Hotrod-Rosewood-24-neck")},
+    {id:"rose22",label:"Rosewood 22 Fret",src:paths("neck","San-Dimas_0007s_0000s_0000_Hotrod-Rosewood-22-neck")},
+    {id:"ebony24",label:"Ebony 24 Fret",src:paths("neck","San-Dimas_0007s_0001s_0002_Hotrod-Ebony-24-neck")},
+    {id:"ebony22",label:"Ebony 22 Fret",src:paths("neck","San-Dimas_0003s_0000s_0002_Hotrod-Ebony-22-neck")}
+  ],
+  headstock:[
+    {id:"natural",label:"Natural Headstock",src:paths("headstock","San-Dimas_0007s_0000_Hotrod-headstock-natural")}
+  ],
+  nut:[
+    {id:"none",label:"No Nut",src:""},
+    {id:"black",label:"Black Nut",src:paths("nut","San-Dimas_0003s_0000s_0001_Hotrod-Nut-black")},
+    {id:"white",label:"White Nut",src:paths("nut","San-Dimas_0003s_0000s_0000_Hotrod-Nut-white")}
+  ],
+  pickups:[
+    {id:"hb-black",label:"HB Set Black",src:[
+      ...paths("pickups","San-Dimas_0006s_0000_Hotrod-HB-neck-black"),
+      ...paths("pickups","San-Dimas_0006s_0001_Hotrod-HB-middle-black"),
+      ...paths("pickups","San-Dimas_0006s_0002_Hotrod-HB-Bridge-black")
+    ]},
+    {id:"hb-white",label:"HB Set White",src:[
+      ...paths("pickups","San-Dimas_0005s_0000_Hotrod-HB-neck-white"),
+      ...paths("pickups","San-Dimas_0005s_0001_Hotrod-HB-middle-white"),
+      ...paths("pickups","San-Dimas_0005s_0002_Hotrod-HB-Bridge-white")
+    ]}
+  ],
+  rings:[
+    {id:"none",label:"No Rings",src:""},
+    {id:"black",label:"Black Rings",src:[
+      ...paths("rings","San-Dimas_0004s_0002s_0000_Hotrod-Ring-neck-black"),
+      ...paths("rings","San-Dimas_0004s_0002s_0001_Hotrod-Ring-middle-black"),
+      ...paths("rings","San-Dimas_0004s_0002s_0002_Hotrod-Ring-Bridge-black")
+    ]},
+    {id:"chrome",label:"Chrome Rings",src:[
+      ...paths("rings","San-Dimas_0004s_0001s_0000_Hotrod-Ring-Neck-chrome"),
+      ...paths("rings","San-Dimas_0004s_0001s_0001_Hotrod-Ring-Middle-chrome"),
+      ...paths("rings","San-Dimas_0004s_0001s_0002_Hotrod-Ring-bridge-chrome")
+    ]},
+    {id:"gold",label:"Gold Rings",src:[
+      ...paths("rings","San-Dimas_0004s_0000s_0000_Hotrod-Ring-Neck-gold"),
+      ...paths("rings","San-Dimas_0004s_0000s_0001_Hotrod-Ring-Middle-gold"),
+      ...paths("rings","San-Dimas_0004s_0000s_0002_Hotrod-Ring-bridge-gold")
+    ]}
+  ],
+  bridge:[
+    {id:"fr-black",label:"Floyd Rose Black",src:paths("bridge","San-Dimas_0003s_0002_Hotrod-FR-hardware-black")},
+    {id:"fr-chrome",label:"Floyd Rose Chrome",src:paths("bridge","San-Dimas_0003s_0003_Hotrod-FR-hardware-chrome")},
+    {id:"fr-gold",label:"Floyd Rose Gold",src:paths("bridge","San-Dimas_0003s_0001_Hotrod-FR-hardware-gold")},
+    {id:"vt-black",label:"Vintage Trem Black",src:paths("bridge","San-Dimas_0003s_0004_Hotrod-VT-black")},
+    {id:"vt-chrome",label:"Vintage Trem Chrome",src:paths("bridge","San-Dimas_0003s_0002_Hotrod-VT-chrome")},
+    {id:"vt-gold",label:"Vintage Trem Gold",src:paths("bridge","San-Dimas_0003s_0000_Hotrod-VT-Gold")}
+  ],
+  knobs:[
+    {id:"black",label:"Black Speed Knobs",src:paths("knobs","San-Dimas_0002s_0002_Hotrod-speed-knobs-black")},
+    {id:"chrome",label:"Chrome Speed Knobs",src:paths("knobs","San-Dimas_0002s_0000_Hotrod-speed-knobs-chrome")},
+    {id:"gold",label:"Gold Speed Knobs",src:paths("knobs","San-Dimas_0002s_0001_Hotrod-speed-knobs-gold")}
+  ],
+  switch:[
+    {id:"black",label:"Black Switch",src:paths("switch","San-Dimas_0001s_0002_Hotrod-switch-black")},
+    {id:"chrome",label:"Chrome Switch",src:paths("switch","San-Dimas_0001s_0002_Hotrod-switch-chrome")},
+    {id:"gold",label:"Gold Switch",src:paths("switch","San-Dimas_0001s_0002_Hotrod-switch-gold")}
+  ]
+};
+
+const DEFAULT_STATE = {
+  body:"white", neck:"maple24", headstock:"natural", nut:"black",
+  pickups:"hb-black", rings:"black", bridge:"fr-black", knobs:"black", switch:"black",
+  visible:{body:true,neck:true,headstock:false,nut:true,pickups:true,rings:true,bridge:true,knobs:true,switch:true}
+};
+
+let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+
+const sections = [
+  ["body","BODY","Body colors",false,true],
+  ["neck","NECK","22 / 24 fret necks",false,true],
+  ["headstock","NATURAL HEADSTOCK","Independent ON/OFF",true,false],
+  ["nut","NUT","Locking nut options",true,false],
+  ["pickups","PICKUPS","Independent ON/OFF",true,true],
+  ["rings","PICKUP RINGS","Independent ON/OFF",true,true],
+  ["bridge","BRIDGE","FR / VT hardware",false,false],
+  ["knobs","KNOBS","Speed knobs",false,false],
+  ["switch","SWITCH","Blade switch colors",false,false]
+];
+
+function selectedItem(cat){ return CATALOG[cat].find(x=>x.id===state[cat]) || CATALOG[cat][0]; }
+function normalize(src){ if(!src) return []; return Array.isArray(src) ? src : [src]; }
+
+function loadOne(img, sources, i=0){
+  if(i >= sources.length){ img.removeAttribute("src"); img.classList.add("hidden"); return; }
+  img.onerror = ()=>loadOne(img, sources, i+1);
+  img.onload = ()=>img.classList.remove("hidden");
+  img.src = sources[i];
+}
+
+function setLayer(cat){
+  const img = document.querySelector(`[data-layer="${cat}"]`);
+  const selected = selectedItem(cat);
+  const sources = normalize(selected?.src);
+  if(!img) return;
+  if(!state.visible[cat] || !sources.length){ img.removeAttribute("src"); img.classList.add("hidden"); return; }
+  loadOne(img, sources);
+}
+
+function render(){ Object.keys(CATALOG).forEach(setLayer); }
+
+function buildControls(){
+  const box = document.getElementById("controls");
+  box.innerHTML = "";
+  sections.forEach(([cat,title,sub,hasToggle,open])=>{
+    const sec = document.createElement("div");
+    sec.className = "section" + (open ? " open" : "");
+    sec.innerHTML = `
+      <div class="sectionHead"><div><strong>${title}</strong><small>${sub}</small></div><span>⌄</span></div>
+      <div class="sectionBody" style="display:${open ? "grid" : "none"}"></div>`;
+    const body = sec.querySelector(".sectionBody");
+
+    if(hasToggle){
+      const row = document.createElement("div");
+      row.className = "toggleRow";
+      row.innerHTML = `<span class="label">ON/OFF</span><label class="toggle"><input type="checkbox" ${state.visible[cat] ? "checked" : ""}><span class="switchUI"></span><span class="toggleText">${state.visible[cat] ? "ON" : "OFF"}</span></label>`;
+      const input = row.querySelector("input");
+      const text = row.querySelector(".toggleText");
+      input.onchange = ()=>{ state.visible[cat]=input.checked; text.textContent=input.checked?"ON":"OFF"; setLayer(cat); };
+      body.appendChild(row);
+    }
+
+    const label = document.createElement("div");
+    label.className = "label";
+    label.textContent = title;
+    body.appendChild(label);
+
+    const select = document.createElement("select");
+    CATALOG[cat].forEach(opt=>{
+      const o = document.createElement("option");
+      o.value = opt.id;
+      o.textContent = opt.label;
+      select.appendChild(o);
+    });
+    select.value = state[cat];
+    select.onchange = ()=>{ state[cat] = select.value; setLayer(cat); };
+    body.appendChild(select);
+
+    sec.querySelector(".sectionHead").onclick = ()=>{
+      sec.classList.toggle("open");
+      body.style.display = sec.classList.contains("open") ? "grid" : "none";
+    };
+    box.appendChild(sec);
+  });
+}
+
+document.getElementById("resetBtn").onclick = ()=>{
+  state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+  buildControls(); render();
+};
+
+document.getElementById("randomBtn").onclick = ()=>{
+  Object.keys(CATALOG).forEach(cat=>{
+    const list = CATALOG[cat].filter(x=>x.id !== "none");
+    if(list.length) state[cat] = list[Math.floor(Math.random()*list.length)].id;
+  });
+  state.visible.headstock = Math.random() > .5;
+  state.visible.nut = true;
+  state.visible.pickups = true;
+  state.visible.rings = Math.random() > .25;
+  buildControls(); render();
+};
+
+buildControls();
+render();
+</script>
+</body>
+</html>
