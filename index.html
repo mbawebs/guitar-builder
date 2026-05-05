@@ -425,7 +425,12 @@ const CATALOG = {
   ],
 
   bridge:[
-    {id:"fr-black",label:"Floyd Rose Black",src:paths("bridge","San-Dimas_0003s_0005_Hotrod-FR-hardware-black")},
+    {id:"fr-black",label:"Floyd Rose Black",src:[
+  ...paths("bridge","San-Dimas_0003s_0005_Hotrod-FR-hardware-black"),
+  ...paths("bridge","San-Dimas_0003s_0005_Hotrod-FR-Hardware-black"),
+  ...paths("bridge","San-Dimas_0003s_0005_Hotrod-FR-Harware-black"),
+  ...paths("bridge","San-Dimas_0003s_0005_Hotrod-FR-harware-black"),
+   ]},
     {id:"fr-chrome",label:"Floyd Rose Chrome",src:paths("bridge","San-Dimas_0003s_0003_Hotrod-FR-hardware-chrome")},
     {id:"fr-gold",label:"Floyd Rose Gold",src:paths("bridge","San-Dimas_0003s_0001_Hotrod-FR-hardware-gold")},
     {id:"vt-black",label:"Vintage Trem Black",src:paths("bridge","San-Dimas_0003s_0004_Hotrod-VT-black")},
