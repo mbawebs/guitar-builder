@@ -106,13 +106,14 @@ const CATALOG = {
     {id:"yellow",label:"Yellow",src:paths("body","San-Dimas_0007s_0002s_0006_Hotrod-body-yellow")},
     {id:"orange",label:"Solar Orange",src:paths("body","San-Dimas_0007s_0002s_0007_Hotrod-body-solar-orange")}
   ],
-  neck:[
-    {id:"maple24",label:"Maple 24 Fret",src:paths("neck","San-Dimas_0007s_0001s_0000_Hotrod-Maple-24-neck")},
-    {id:"maple22",label:"Maple 22 Fret",src:paths("neck","San-Dimas_0003s_0000_Hotrod-Maple-22-neck")},
-    {id:"rose24",label:"Rosewood 24 Fret",src:paths("neck","San-Dimas_0007s_0001s_0001_Hotrod-Rosewood-24-neck")},
-    {id:"rose22",label:"Rosewood 22 Fret",src:paths("neck","San-Dimas_0007s_0000s_0000_Hotrod-Rosewood-22-neck")},
-    {id:"ebony24",label:"Ebony 24 Fret",src:paths("neck","San-Dimas_0007s_0001s_0002_Hotrod-Ebony-24-neck")},
-    {id:"ebony22",label:"Ebony 22 Fret",src:paths("neck","San-Dimas_0003s_0000s_0002_Hotrod-Ebony-22-neck")}
+ neck:[
+  {id:"maple24",label:"Maple 24 Fret",src:paths("neck","San-Dimas_0007s_0001s_0000_Hotrod-Maple-24-neck")},
+  {id:"rose24",label:"Rosewood 24 Fret",src:paths("neck","San-Dimas_0007s_0001s_0001_Hotrod-Rosewood-24-neck")},
+  {id:"ebony24",label:"Ebony 24 Fret",src:paths("neck","San-Dimas_0007s_0001s_0002_Hotrod-Ebony-24-neck")},
+
+  {id:"maple22",label:"Maple 22 Fret",src:paths("neck","San-Dimas_0007s_0000s_0000_Hotrod-Maple-22-neck")},
+  {id:"rose22",label:"Rosewood 22 Fret",src:paths("neck","San-Dimas_0007s_0000s_0001_Hotrod-Rosewood-22-neck")},
+  {id:"ebony22",label:"Ebony 22 Fret",src:paths("neck","San-Dimas_0007s_0000s_0002_Hotrod-Ebony-22-neck")}
   ],
   headstock:[
     {id:"natural",label:"Natural Headstock",src:paths("headstock","San-Dimas_0007s_0000_Hotrod-headstock-natural")}
@@ -123,15 +124,12 @@ const CATALOG = {
     {id:"white",label:"White Nut",src:paths("nut","San-Dimas_0003s_0000s_0000_Hotrod-Nut-white")}
   ],
   pickups:[
-    {id:"hb-black",label:"HB Set Black",src:[
-      ...paths("pickups","San-Dimas_0006s_0000_Hotrod-HB-neck-black"),
-      ...paths("pickups","San-Dimas_0006s_0001_Hotrod-HB-middle-black"),
-      ...paths("pickups","San-Dimas_0006s_0002_Hotrod-HB-Bridge-black")
-    ]},
-    {id:"hb-white",label:"HB Set White",src:[
-      ...paths("pickups","San-Dimas_0005s_0000_Hotrod-HB-neck-white"),
-      ...paths("pickups","San-Dimas_0005s_0001_Hotrod-HB-middle-white"),
-      ...paths("pickups","San-Dimas_0005s_0002_Hotrod-HB-Bridge-white")
+  {id:"neck-black",label:"Neck HB Black",src:paths("pickups","San-Dimas_0006s_0000_Hotrod-HB-neck-black")},
+  {id:"middle-black",label:"Middle HB Black",src:paths("pickups","San-Dimas_0006s_0001_Hotrod-HB-middle-black")},
+  {id:"bridge-black",label:"Bridge HB Black",src:paths("pickups","San-Dimas_0006s_0002_Hotrod-HB-Bridge-black")},
+  {id:"neck-white",label:"Neck HB White",src:paths("pickups","San-Dimas_0005s_0000_Hotrod-HB-neck-white")},
+  {id:"middle-white",label:"Middle HB White",src:paths("pickups","San-Dimas_0005s_0001_Hotrod-HB-middle-white")},
+  {id:"bridge-white",label:"Bridge HB White",src:paths("pickups","San-Dimas_0005s_0002_Hotrod-HB-Bridge-white")}
     ]}
   ],
   rings:[
@@ -153,7 +151,7 @@ const CATALOG = {
     ]}
   ],
   bridge:[
-    {id:"fr-black",label:"Floyd Rose Black",src:paths("bridge","San-Dimas_0003s_0002_Hotrod-FR-hardware-black")},
+    {id:"fr-black",label:"Floyd Rose Black",src:paths("bridge","San-Dimas_0003s_0005_Hotrod-FR-hardware-black")},
     {id:"fr-chrome",label:"Floyd Rose Chrome",src:paths("bridge","San-Dimas_0003s_0003_Hotrod-FR-hardware-chrome")},
     {id:"fr-gold",label:"Floyd Rose Gold",src:paths("bridge","San-Dimas_0003s_0001_Hotrod-FR-hardware-gold")},
     {id:"vt-black",label:"Vintage Trem Black",src:paths("bridge","San-Dimas_0003s_0004_Hotrod-VT-black")},
