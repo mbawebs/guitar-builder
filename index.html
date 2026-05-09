@@ -722,6 +722,209 @@ button.secondary{
   box-sizing: border-box;
 }
 
+
+/* SHREDLAB PHASE 2 FIXES */
+.sectionHead strong{
+  font-size:16px;
+  letter-spacing:.14em;
+  font-weight:1000;
+}
+.sectionHead small{
+  font-size:12px;
+  opacity:.95;
+}
+.label{
+  font-size:12px;
+  color:#d7e2ef;
+  letter-spacing:.18em;
+  font-weight:1000;
+}
+.optionName{
+  font-size:12px;
+}
+
+#backFullViewBtn.backFullViewBtn{
+  display:none;
+  position:fixed;
+  top:18px;
+  right:18px;
+  left:auto;
+  width:auto;
+  min-width:0;
+  max-width:220px;
+  z-index:99999;
+  padding:10px 18px;
+  margin:0;
+  border-radius:999px;
+  border:0;
+  background:linear-gradient(135deg,#7CFF6B,#A8FF6A);
+  color:#06100a;
+  font-size:11px;
+  font-weight:1000;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  box-shadow:0 0 22px rgba(124,255,107,.45);
+  cursor:pointer;
+}
+
+body.fullViewMode .sidebar{display:none;}
+body.fullViewMode .app{
+  grid-template-columns:1fr;
+  padding:0;
+  gap:0;
+}
+body.fullViewMode .stage{
+  min-height:100vh;
+  height:100vh;
+  border-radius:0;
+  border:0;
+  touch-action:pan-x pan-y pinch-zoom;
+}
+body.fullViewMode .guitarWrap{
+  width:min(72vw,760px);
+  height:min(96vh,1120px);
+  animation:none;
+  transform:none !important;
+}
+body.fullViewMode #backFullViewBtn{display:block;}
+
+.vaultScreen{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:90000;
+  background:#060606;
+  color:var(--text);
+  overflow:hidden;
+}
+.vaultScreen.open{display:grid;grid-template-rows:auto 1fr auto;}
+.vaultTopbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  padding:16px 18px;
+  background:linear-gradient(180deg,rgba(10,14,22,.96),rgba(6,8,12,.88));
+  border-bottom:1px solid rgba(255,255,255,.10);
+  z-index:3;
+}
+.vaultTopbar h2{margin:0;font-size:20px;letter-spacing:.14em;}
+.vaultTopbar p{margin:4px 0 0;color:var(--muted);font-size:12px;}
+.pillBtn{
+  width:auto;
+  margin:0;
+  padding:10px 16px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#7CFF6B,#A8FF6A);
+  color:#06100a;
+  box-shadow:0 0 22px rgba(124,255,107,.32);
+  white-space:nowrap;
+}
+.dangerBtn{background:linear-gradient(135deg,#ff375f,#ff8a3d);color:white;}
+.vaultWall{
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(255,226,170,.30),transparent 30%),
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(180deg,#221611,#0c0908);
+  background-size:auto,64px 34px,64px 34px,auto;
+  box-shadow:inset 0 0 140px rgba(0,0,0,.72);
+}
+.vaultWall:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,rgba(0,0,0,.45),transparent 22%,transparent 78%,rgba(0,0,0,.48));
+  pointer-events:none;
+}
+.spotlight{
+  position:absolute;
+  top:-22vh;
+  width:54vw;
+  height:78vh;
+  background:radial-gradient(ellipse at center,rgba(255,243,201,.28),rgba(255,243,201,.08) 35%,transparent 68%);
+  filter:blur(8px);
+  pointer-events:none;
+}
+.vaultGuitarWrap{
+  position:relative;
+  width:min(54vw,560px);
+  height:min(78vh,860px);
+  z-index:2;
+  filter:drop-shadow(0 42px 45px rgba(0,0,0,.72));
+}
+.emptyVault{
+  display:none;
+  position:absolute;
+  z-index:4;
+  text-align:center;
+  max-width:420px;
+  padding:24px;
+  border-radius:24px;
+  background:rgba(0,0,0,.42);
+  border:1px solid rgba(255,255,255,.14);
+}
+.emptyVault.show{display:block;}
+.emptyVault h3{margin:0 0 8px;font-size:22px;letter-spacing:.1em;}
+.emptyVault p{margin:0;color:var(--muted);line-height:1.45;}
+.vaultArrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:54px;
+  height:54px;
+  margin:0;
+  padding:0;
+  border-radius:50%;
+  z-index:5;
+  font-size:34px;
+  line-height:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.vaultPrev{left:18px;}
+.vaultNext{right:18px;}
+.vaultScreen.vaultFullView .vaultTopbar{display:none;}
+.vaultScreen.vaultFullView .vaultControls{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:8;border-radius:999px;background:rgba(6,8,12,.72);backdrop-filter:blur(10px);}
+.vaultScreen.vaultFullView .vaultGuitarWrap{width:min(76vw,760px);height:min(92vh,1080px);}
+.vaultControls{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:14px;
+  background:linear-gradient(180deg,rgba(6,8,12,.88),rgba(10,14,22,.96));
+  border-top:1px solid rgba(255,255,255,.10);
+}
+.vaultName{
+  font-weight:1000;
+  letter-spacing:.12em;
+  color:#fff;
+  padding:0 12px;
+}
+
+@media(max-width:900px){
+  .sectionHead strong{font-size:13px;}
+  .label{font-size:10px;}
+  .optionName{font-size:11px;}
+  #backFullViewBtn.backFullViewBtn{top:10px;right:10px;font-size:10px;padding:9px 13px;}
+  body.fullViewMode .guitarWrap{width:82vw;height:94vh;}
+  .vaultTopbar{padding:12px;}
+  .vaultTopbar h2{font-size:15px;}
+  .vaultTopbar p{display:none;}
+  .vaultGuitarWrap{width:84vw;height:72vh;}
+  .vaultArrow{width:44px;height:44px;font-size:28px;}
+  .vaultControls{gap:8px;padding:10px;}
+  .pillBtn{font-size:10px;padding:9px 12px;}
+}
+
 </style>
 </head>
 
@@ -742,17 +945,15 @@ button.secondary{
     <div class="footer">
       <button id="randomBtn">RANDOMIZE BUILD</button>
       <button class="secondary" id="resetBtn">RESET</button>
-      <button class="secondary" id="fullViewBtn">
-    FULL VIEW
-  </button>
+      <button class="secondary" id="fullViewBtn">FULL VIEW</button>
+      <button class="secondary" id="saveBuildBtn">SAVE BUILD</button>
+      <button class="secondary" id="vaultBtn">SHRED VAULT</button>
       <div class="hint">Modular builder: woods, inlays, bindings, pickups, rings and hardware are separate layers.</div>
     </div>
   </aside>
 
   <main class="stage">
-<button id="backFullViewBtn" class="backFullViewBtn">
-  BACK TO EDITOR
-</button>
+    <button id="backFullViewBtn" class="backFullViewBtn">BACK TO EDITOR</button>
     <div class="watermark">
       <h2>SHRED</h2>
       <p>BUILD YOUR AXE</p>
@@ -780,6 +981,53 @@ button.secondary{
       <img class="guitarLayer layer-switch hidden" data-layer="switch">
     </div>
   </main>
+
+</div>
+
+<div class="vaultScreen" id="vaultScreen">
+  <div class="vaultTopbar">
+    <div>
+      <h2>SHRED VAULT</h2>
+      <p>Your saved builds live here locally on this browser.</p>
+    </div>
+    <button id="closeVaultBtn" class="pillBtn">BACK TO BUILDER</button>
+  </div>
+
+  <div class="vaultWall">
+    <div class="spotlight"></div>
+    <button id="vaultPrevBtn" class="vaultArrow vaultPrev">‹</button>
+    <button id="vaultNextBtn" class="vaultArrow vaultNext">›</button>
+
+    <div class="vaultGuitarWrap" id="vaultGuitarWrap">
+      <img class="guitarLayer layer-body hidden" data-vault-layer="body">
+      <img class="guitarLayer layer-neck hidden" data-vault-layer="neck">
+      <img class="guitarLayer layer-binding hidden" data-vault-layer="binding">
+      <img class="guitarLayer layer-inlays hidden" data-vault-layer="inlays">
+      <img class="guitarLayer layer-headstock hidden" data-vault-layer="headstock">
+      <img class="guitarLayer layer-nut hidden" data-vault-layer="nut">
+      <img class="guitarLayer layer-ring-neck hidden" data-vault-layer="ringNeck">
+      <img class="guitarLayer layer-ring-middle hidden" data-vault-layer="ringMiddle">
+      <img class="guitarLayer layer-ring-bridge hidden" data-vault-layer="ringBridge">
+      <img class="guitarLayer layer-pickup-neck hidden" data-vault-layer="pickupNeck">
+      <img class="guitarLayer layer-pickup-middle hidden" data-vault-layer="pickupMiddle">
+      <img class="guitarLayer layer-pickup-bridge hidden" data-vault-layer="pickupBridge">
+      <img class="guitarLayer layer-bridge hidden" data-vault-layer="bridge">
+      <img class="guitarLayer layer-knobs hidden" data-vault-layer="knobs">
+      <img class="guitarLayer layer-switch hidden" data-vault-layer="switch">
+    </div>
+
+    <div class="emptyVault" id="emptyVault">
+      <h3>No builds saved yet</h3>
+      <p>Build something nasty, hit SAVE BUILD, and it will appear on this wall.</p>
+    </div>
+  </div>
+
+  <div class="vaultControls">
+    <div class="vaultName" id="vaultName">Build #01</div>
+    <button id="vaultEditBtn" class="pillBtn">EDIT THIS BUILD</button>
+    <button id="vaultFullBtn" class="pillBtn">FULL VIEW</button>
+    <button id="vaultDeleteBtn" class="pillBtn dangerBtn">DELETE</button>
+  </div>
 </div>
 
 <script>
@@ -1228,69 +1476,195 @@ document.getElementById("randomBtn").onclick = ()=>{
 };
 
 const guitarWrap = document.getElementById("guitarWrap");
-document.querySelector(".stage").addEventListener("mousemove", e=>{
-  if(window.innerWidth < 900) return;
+const fullViewBtn = document.getElementById("fullViewBtn");
+const backFullViewBtn = document.getElementById("backFullViewBtn");
+const sidebar = document.querySelector(".sidebar");
+const stage = document.querySelector(".stage");
+const saveBuildBtn = document.getElementById("saveBuildBtn");
+const vaultBtn = document.getElementById("vaultBtn");
+const vaultScreen = document.getElementById("vaultScreen");
+const closeVaultBtn = document.getElementById("closeVaultBtn");
+const vaultPrevBtn = document.getElementById("vaultPrevBtn");
+const vaultNextBtn = document.getElementById("vaultNextBtn");
+const vaultEditBtn = document.getElementById("vaultEditBtn");
+const vaultFullBtn = document.getElementById("vaultFullBtn");
+const vaultDeleteBtn = document.getElementById("vaultDeleteBtn");
+const vaultName = document.getElementById("vaultName");
+const emptyVault = document.getElementById("emptyVault");
+
+let isFullView = false;
+let vaultBuilds = JSON.parse(localStorage.getItem("shredlabVault") || "[]");
+let vaultIndex = 0;
+let vaultFullMode = false;
+
+function deepCopy(obj){
+  return JSON.parse(JSON.stringify(obj));
+}
+
+function saveVault(){
+  localStorage.setItem("shredlabVault", JSON.stringify(vaultBuilds));
+}
+
+function enterFullView(){
+  isFullView = true;
+  document.body.classList.add("fullViewMode");
+  backFullViewBtn.style.display = "block";
+  fullViewBtn.innerText = "BACK TO EDITOR";
+}
+
+function exitFullView(){
+  isFullView = false;
+  document.body.classList.remove("fullViewMode");
+  backFullViewBtn.style.display = "none";
+  fullViewBtn.innerText = "FULL VIEW";
+  guitarWrap.style.transform = "";
+}
+
+fullViewBtn.addEventListener("click", () => {
+  if(isFullView){
+    exitFullView();
+  } else {
+    enterFullView();
+  }
+});
+
+backFullViewBtn.addEventListener("click", () => {
+  exitFullView();
+});
+
+stage.addEventListener("mousemove", e=>{
+  if(window.innerWidth < 900 || isFullView || vaultScreen.classList.contains("open")) return;
   const rect = e.currentTarget.getBoundingClientRect();
   const x = ((e.clientX - rect.left) / rect.width - .5) * 10;
   const y = ((e.clientY - rect.top) / rect.height - .5) * -10;
   guitarWrap.style.transform = `translateY(-6px) rotateX(${y}deg) rotateY(${x}deg)`;
 });
 
-document.querySelector(".stage").addEventListener("mouseleave", ()=>{
+stage.addEventListener("mouseleave", ()=>{
+  if(isFullView) return;
   guitarWrap.style.transform = "";
 });
+
+function setVaultLayer(cat, buildState){
+  const img = document.querySelector(`[data-vault-layer="${cat}"]`);
+  if(!img) return;
+
+  const selected = (CATALOG[cat] || []).find(x=>x.id === buildState[cat]) || (CATALOG[cat] || [])[0];
+  const sources = normalize(selected?.src);
+
+  if(!buildState.visible?.[cat] || !sources.length){
+    img.removeAttribute("src");
+    img.classList.add("hidden");
+    return;
+  }
+
+  loadOne(img, sources);
+}
+
+function renderVault(){
+  const hasBuilds = vaultBuilds.length > 0;
+  emptyVault.classList.toggle("show", !hasBuilds);
+
+  document.getElementById("vaultGuitarWrap").style.display = hasBuilds ? "block" : "none";
+  vaultPrevBtn.style.display = hasBuilds ? "flex" : "none";
+  vaultNextBtn.style.display = hasBuilds ? "flex" : "none";
+  vaultEditBtn.style.display = hasBuilds ? "inline-block" : "none";
+  vaultFullBtn.style.display = hasBuilds ? "inline-block" : "none";
+  vaultDeleteBtn.style.display = hasBuilds ? "inline-block" : "none";
+
+  if(!hasBuilds){
+    vaultName.textContent = "SHRED VAULT";
+    return;
+  }
+
+  if(vaultIndex < 0) vaultIndex = vaultBuilds.length - 1;
+  if(vaultIndex >= vaultBuilds.length) vaultIndex = 0;
+
+  const current = vaultBuilds[vaultIndex];
+  vaultName.textContent = current.name || `BUILD #${vaultIndex + 1}`;
+  Object.keys(CATALOG).forEach(cat=>setVaultLayer(cat, current.state));
+}
+
+function openVault(){
+  exitFullView();
+  vaultScreen.classList.add("open");
+  renderVault();
+}
+
+function closeVault(){
+  vaultScreen.classList.remove("open");
+  vaultScreen.classList.remove("vaultFullView");
+  vaultFullMode = false;
+}
+
+saveBuildBtn.addEventListener("click", () => {
+  const buildNumber = vaultBuilds.length + 1;
+  vaultBuilds.push({
+    id: Date.now(),
+    name: `BUILD #${String(buildNumber).padStart(2,"0")}`,
+    state: deepCopy(state)
+  });
+  saveVault();
+  vaultIndex = vaultBuilds.length - 1;
+  saveBuildBtn.textContent = "SAVED!";
+  setTimeout(()=>saveBuildBtn.textContent = "SAVE BUILD", 900);
+});
+
+vaultBtn.addEventListener("click", openVault);
+closeVaultBtn.addEventListener("click", closeVault);
+
+vaultPrevBtn.addEventListener("click", () => {
+  vaultIndex--;
+  renderVault();
+});
+
+vaultNextBtn.addEventListener("click", () => {
+  vaultIndex++;
+  renderVault();
+});
+
+vaultEditBtn.addEventListener("click", () => {
+  if(!vaultBuilds.length) return;
+  state = deepCopy(vaultBuilds[vaultIndex].state);
+  activeGroup = "core";
+  buildTabs();
+  buildControls();
+  render();
+  closeVault();
+});
+
+vaultFullBtn.addEventListener("click", () => {
+  vaultFullMode = !vaultFullMode;
+  vaultScreen.classList.toggle("vaultFullView", vaultFullMode);
+  vaultFullBtn.textContent = vaultFullMode ? "NORMAL VIEW" : "FULL VIEW";
+});
+
+vaultDeleteBtn.addEventListener("click", () => {
+  if(!vaultBuilds.length) return;
+  vaultBuilds.splice(vaultIndex, 1);
+  if(vaultIndex >= vaultBuilds.length) vaultIndex = Math.max(0, vaultBuilds.length - 1);
+  saveVault();
+  renderVault();
+});
+
+let touchStartX = null;
+vaultScreen.addEventListener("touchstart", e => {
+  touchStartX = e.touches[0].clientX;
+},{passive:true});
+
+vaultScreen.addEventListener("touchend", e => {
+  if(touchStartX === null || !vaultBuilds.length) return;
+  const diff = e.changedTouches[0].clientX - touchStartX;
+  if(Math.abs(diff) > 50){
+    vaultIndex += diff < 0 ? 1 : -1;
+    renderVault();
+  }
+  touchStartX = null;
+},{passive:true});
 
 buildTabs();
 buildControls();
 render();
-  const fullViewBtn = document.getElementById("fullViewBtn");
-const sidebar = document.querySelector(".sidebar");
-const stage = document.querySelector(".stage");
-  const backFullViewBtn = document.getElementById("backFullViewBtn");
-
-let isFullView = false;
-
-fullViewBtn.addEventListener("click", () => {
-
-  isFullView = !isFullView;
-
-  if(isFullView){
-
-    sidebar.style.display = "none";
-    backFullViewBtn.style.display = "block";
-
-    stage.style.width = "100vw";
-    stage.style.maxWidth = "100vw";
-
-    guitarWrap.style.transform = "scale(1.15)";
-
-    fullViewBtn.innerText = "BACK TO EDITOR";
-
-  } else {
-
-    sidebar.style.display = "";
-    backFullViewBtn.style.display = "none";
-
-    stage.style.width = "";
-    stage.style.maxWidth = "";
-
-    guitarWrap.style.transform = "";
-
-    fullViewBtn.innerText = "FULL VIEW";
-  }
-
-});
-  backFullViewBtn.addEventListener("click", () => {
-  isFullView = false;
-
-  sidebar.style.display = "";
-  stage.style.width = "";
-  stage.style.maxWidth = "";
-  guitarWrap.style.transform = "";
-
-  fullViewBtn.innerText = "FULL VIEW";
-  backFullViewBtn.style.display = "none";
-});
 </script>
 </body>
 </html>
