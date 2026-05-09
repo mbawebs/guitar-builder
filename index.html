@@ -721,6 +721,21 @@ button.secondary{
 * {
   box-sizing: border-box;
 }
+  .backFullViewBtn {
+  display: none;
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 9999;
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.25);
+  background: rgba(0,0,0,.75);
+  color: #fff;
+  font-weight: 900;
+  letter-spacing: .8px;
+  cursor: pointer;
+}
 </style>
 </head>
 
@@ -749,6 +764,9 @@ button.secondary{
   </aside>
 
   <main class="stage">
+<button id="backFullViewBtn" class="backFullViewBtn">
+  BACK TO EDITOR
+</button>
     <div class="watermark">
       <h2>SHRED</h2>
       <p>BUILD YOUR AXE</p>
@@ -1242,6 +1260,7 @@ render();
   const fullViewBtn = document.getElementById("fullViewBtn");
 const sidebar = document.querySelector(".sidebar");
 const stage = document.querySelector(".stage");
+  const backFullViewBtn = document.getElementById("backFullViewBtn");
 
 let isFullView = false;
 
@@ -1252,6 +1271,7 @@ fullViewBtn.addEventListener("click", () => {
   if(isFullView){
 
     sidebar.style.display = "none";
+    backFullViewBtn.style.display = "block";
 
     stage.style.width = "100vw";
     stage.style.maxWidth = "100vw";
@@ -1263,6 +1283,7 @@ fullViewBtn.addEventListener("click", () => {
   } else {
 
     sidebar.style.display = "";
+    backFullViewBtn.style.display = "none";
 
     stage.style.width = "";
     stage.style.maxWidth = "";
