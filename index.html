@@ -551,6 +551,16 @@ button.secondary{
   50%{transform:translateY(-10px)}
 }
 
+@keyframes vaultSwipeLeft{
+  0%{transform:translateX(22px) scale(.98);opacity:.35;}
+  100%{transform:translateX(0) scale(1);opacity:1;}
+}
+
+@keyframes vaultSwipeRight{
+  0%{transform:translateX(-22px) scale(.98);opacity:.35;}
+  100%{transform:translateX(0) scale(1);opacity:1;}
+}
+
 @media(max-width:900px){
   body{
     overflow:hidden;
@@ -857,6 +867,29 @@ body.fullViewMode #backFullViewBtn{display:block;}
   height:min(78vh,860px);
   z-index:2;
   filter:drop-shadow(0 42px 45px rgba(0,0,0,.72));
+  transition:transform .28s ease, opacity .28s ease;
+  touch-action:none;
+}
+
+body.fullViewMode .stage,
+body.fullViewMode .guitarWrap,
+.vaultScreen.vaultFullView .vaultWall,
+.vaultScreen.vaultFullView .vaultGuitarWrap{
+  touch-action:none;
+}
+
+.guitarWrap.zooming,
+.vaultGuitarWrap.zooming{
+  animation:none !important;
+  transition:none !important;
+}
+
+.vaultGuitarWrap.swipeLeft{
+  animation:vaultSwipeLeft .32s ease;
+}
+
+.vaultGuitarWrap.swipeRight{
+  animation:vaultSwipeRight .32s ease;
 }
 .emptyVault{
   display:none;
@@ -891,8 +924,24 @@ body.fullViewMode #backFullViewBtn{display:block;}
 .vaultPrev{left:18px;}
 .vaultNext{right:18px;}
 .vaultScreen.vaultFullView .vaultTopbar{display:none;}
-.vaultScreen.vaultFullView .vaultControls{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:8;border-radius:999px;background:rgba(6,8,12,.72);backdrop-filter:blur(10px);}
+.vaultScreen.vaultFullView .vaultControls{
+  position:absolute;
+  top:14px;
+  right:14px;
+  bottom:auto;
+  left:auto;
+  transform:none;
+  z-index:8;
+  border-radius:999px;
+  background:rgba(6,8,12,.72);
+  backdrop-filter:blur(10px);
+}
+.vaultScreen.vaultFullView .vaultName,
+.vaultScreen.vaultFullView #vaultEditBtn,
+.vaultScreen.vaultFullView #vaultDeleteBtn{display:none !important;}
 .vaultScreen.vaultFullView .vaultGuitarWrap{width:min(76vw,760px);height:min(92vh,1080px);}
+.vaultScreen.vaultFullView .vaultArrow{opacity:.18;}
+.vaultScreen.vaultFullView .vaultArrow:hover{opacity:1;}
 .vaultControls{
   display:flex;
   align-items:center;
@@ -904,10 +953,21 @@ body.fullViewMode #backFullViewBtn{display:block;}
   border-top:1px solid rgba(255,255,255,.10);
 }
 .vaultName{
+  cursor:pointer;
   font-weight:1000;
   letter-spacing:.12em;
   color:#fff;
   padding:0 12px;
+}
+
+@keyframes vaultSwipeLeft{
+  0%{transform:translateX(22px) scale(.98);opacity:.35;}
+  100%{transform:translateX(0) scale(1);opacity:1;}
+}
+
+@keyframes vaultSwipeRight{
+  0%{transform:translateX(-22px) scale(.98);opacity:.35;}
+  100%{transform:translateX(0) scale(1);opacity:1;}
 }
 
 @media(max-width:900px){
@@ -1506,6 +1566,7 @@ function saveVault(){
 }
 
 function enterFullView(){
+  resetStageZoom();
   isFullView = true;
   document.body.classList.add("fullViewMode");
   backFullViewBtn.style.display = "block";
@@ -1513,12 +1574,72 @@ function enterFullView(){
 }
 
 function exitFullView(){
+  resetStageZoom();
   isFullView = false;
   document.body.classList.remove("fullViewMode");
   backFullViewBtn.style.display = "none";
   fullViewBtn.innerText = "FULL VIEW";
   guitarWrap.style.transform = "";
 }
+
+let stageZoom = 1;
+let vaultZoom = 1;
+let stagePinchStart = null;
+let vaultPinchStart = null;
+
+function applyStageZoom(){
+  guitarWrap.style.transform = `scale(${stageZoom})`;
+}
+
+function resetStageZoom(){
+  stageZoom = 1;
+  guitarWrap.classList.remove("zooming");
+  guitarWrap.style.transform = "";
+}
+
+function applyVaultZoom(){
+  document.getElementById("vaultGuitarWrap").style.transform = `scale(${vaultZoom})`;
+}
+
+function resetVaultZoom(){
+  vaultZoom = 1;
+  const wrap = document.getElementById("vaultGuitarWrap");
+  wrap.classList.remove("zooming");
+  wrap.style.transform = "";
+}
+
+function pinchDistance(touches){
+  const dx = touches[0].clientX - touches[1].clientX;
+  const dy = touches[0].clientY - touches[1].clientY;
+  return Math.hypot(dx, dy);
+}
+
+stage.addEventListener("touchstart", e => {
+  if(!isFullView || e.touches.length !== 2) return;
+  e.preventDefault();
+  guitarWrap.classList.add("zooming");
+  stagePinchStart = { distance: pinchDistance(e.touches), zoom: stageZoom };
+}, {passive:false});
+
+stage.addEventListener("touchmove", e => {
+  if(!isFullView || !stagePinchStart || e.touches.length !== 2) return;
+  e.preventDefault();
+  const nextZoom = stagePinchStart.zoom * (pinchDistance(e.touches) / stagePinchStart.distance);
+  stageZoom = Math.max(1, Math.min(2.35, nextZoom));
+  applyStageZoom();
+}, {passive:false});
+
+stage.addEventListener("touchend", () => {
+  stagePinchStart = null;
+  guitarWrap.classList.remove("zooming");
+}, {passive:true});
+
+stage.addEventListener("wheel", e => {
+  if(!isFullView) return;
+  e.preventDefault();
+  stageZoom = Math.max(1, Math.min(2.35, stageZoom + (e.deltaY < 0 ? .08 : -.08)));
+  applyStageZoom();
+}, {passive:false});
 
 fullViewBtn.addEventListener("click", () => {
   if(isFullView){
@@ -1595,13 +1716,19 @@ function closeVault(){
   vaultScreen.classList.remove("open");
   vaultScreen.classList.remove("vaultFullView");
   vaultFullMode = false;
+  vaultFullBtn.textContent = "FULL VIEW";
+  resetVaultZoom();
 }
 
 saveBuildBtn.addEventListener("click", () => {
   const buildNumber = vaultBuilds.length + 1;
+  const defaultName = `BUILD #${String(buildNumber).padStart(2,"0")}`;
+  const typedName = prompt("Name this build:", defaultName);
+  const buildName = (typedName && typedName.trim()) ? typedName.trim().toUpperCase() : defaultName;
+
   vaultBuilds.push({
     id: Date.now(),
-    name: `BUILD #${String(buildNumber).padStart(2,"0")}`,
+    name: buildName,
     state: deepCopy(state)
   });
   saveVault();
@@ -1613,15 +1740,19 @@ saveBuildBtn.addEventListener("click", () => {
 vaultBtn.addEventListener("click", openVault);
 closeVaultBtn.addEventListener("click", closeVault);
 
-vaultPrevBtn.addEventListener("click", () => {
-  vaultIndex--;
+function moveVault(direction){
+  if(!vaultBuilds.length) return;
+  const wrap = document.getElementById("vaultGuitarWrap");
+  wrap.classList.remove("swipeLeft", "swipeRight");
+  void wrap.offsetWidth;
+  vaultIndex += direction;
   renderVault();
-});
+  wrap.classList.add(direction > 0 ? "swipeLeft" : "swipeRight");
+  setTimeout(()=>wrap.classList.remove("swipeLeft", "swipeRight"), 330);
+}
 
-vaultNextBtn.addEventListener("click", () => {
-  vaultIndex++;
-  renderVault();
-});
+vaultPrevBtn.addEventListener("click", () => moveVault(-1));
+vaultNextBtn.addEventListener("click", () => moveVault(1));
 
 vaultEditBtn.addEventListener("click", () => {
   if(!vaultBuilds.length) return;
@@ -1636,7 +1767,47 @@ vaultEditBtn.addEventListener("click", () => {
 vaultFullBtn.addEventListener("click", () => {
   vaultFullMode = !vaultFullMode;
   vaultScreen.classList.toggle("vaultFullView", vaultFullMode);
-  vaultFullBtn.textContent = vaultFullMode ? "NORMAL VIEW" : "FULL VIEW";
+  vaultFullBtn.textContent = vaultFullMode ? "BACK" : "FULL VIEW";
+  resetVaultZoom();
+});
+
+vaultScreen.addEventListener("touchstart", e => {
+  if(!vaultFullMode || e.touches.length !== 2) return;
+  e.preventDefault();
+  const wrap = document.getElementById("vaultGuitarWrap");
+  wrap.classList.add("zooming");
+  vaultPinchStart = { distance: pinchDistance(e.touches), zoom: vaultZoom };
+}, {passive:false});
+
+vaultScreen.addEventListener("touchmove", e => {
+  if(!vaultFullMode || !vaultPinchStart || e.touches.length !== 2) return;
+  e.preventDefault();
+  const nextZoom = vaultPinchStart.zoom * (pinchDistance(e.touches) / vaultPinchStart.distance);
+  vaultZoom = Math.max(1, Math.min(2.35, nextZoom));
+  applyVaultZoom();
+}, {passive:false});
+
+vaultScreen.addEventListener("touchend", () => {
+  vaultPinchStart = null;
+  document.getElementById("vaultGuitarWrap").classList.remove("zooming");
+}, {passive:true});
+
+vaultScreen.addEventListener("wheel", e => {
+  if(!vaultFullMode) return;
+  e.preventDefault();
+  vaultZoom = Math.max(1, Math.min(2.35, vaultZoom + (e.deltaY < 0 ? .08 : -.08)));
+  applyVaultZoom();
+}, {passive:false});
+
+vaultName.addEventListener("click", () => {
+  if(!vaultBuilds.length || vaultFullMode) return;
+  const current = vaultBuilds[vaultIndex];
+  const newName = prompt("Rename this build:", current.name || `BUILD #${vaultIndex + 1}`);
+  if(newName && newName.trim()){
+    current.name = newName.trim().toUpperCase();
+    saveVault();
+    renderVault();
+  }
 });
 
 vaultDeleteBtn.addEventListener("click", () => {
@@ -1649,15 +1820,15 @@ vaultDeleteBtn.addEventListener("click", () => {
 
 let touchStartX = null;
 vaultScreen.addEventListener("touchstart", e => {
+  if(vaultFullMode || e.touches.length > 1) return;
   touchStartX = e.touches[0].clientX;
 },{passive:true});
 
 vaultScreen.addEventListener("touchend", e => {
-  if(touchStartX === null || !vaultBuilds.length) return;
+  if(vaultFullMode || touchStartX === null || !vaultBuilds.length) return;
   const diff = e.changedTouches[0].clientX - touchStartX;
   if(Math.abs(diff) > 50){
-    vaultIndex += diff < 0 ? 1 : -1;
-    renderVault();
+    moveVault(diff < 0 ? 1 : -1);
   }
   touchStartX = null;
 },{passive:true});
