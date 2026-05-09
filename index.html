@@ -1095,13 +1095,20 @@ function buildOptionCards(cat, body){
   setLayer(cat);
   buildControls();
 
- setTimeout(()=>{
+requestAnimationFrame(()=>{
   if(controlsBox){
     controlsBox.scrollTop = savedPanelScroll;
   }
 
   window.scrollTo(0, savedPageScroll);
-}, 0);
+
+  setTimeout(()=>{
+    if(controlsBox){
+      controlsBox.scrollTop = savedPanelScroll;
+    }
+    window.scrollTo(0, savedPageScroll);
+  }, 50);
+});
 };
 
     grid.appendChild(card);
