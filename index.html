@@ -552,13 +552,15 @@ button.secondary{
 }
 
 @keyframes vaultSwipeLeft{
-  0%{transform:translateX(22px) scale(.98);opacity:.35;}
-  100%{transform:translateX(0) scale(1);opacity:1;}
+  0%{transform:translateX(120px) scale(.92) rotateZ(1.5deg);opacity:0;}
+  65%{transform:translateX(-10px) scale(1.02) rotateZ(-.3deg);opacity:1;}
+  100%{transform:translateX(0) scale(1) rotateZ(0);opacity:1;}
 }
 
 @keyframes vaultSwipeRight{
-  0%{transform:translateX(-22px) scale(.98);opacity:.35;}
-  100%{transform:translateX(0) scale(1);opacity:1;}
+  0%{transform:translateX(-120px) scale(.92) rotateZ(-1.5deg);opacity:0;}
+  65%{transform:translateX(10px) scale(1.02) rotateZ(.3deg);opacity:1;}
+  100%{transform:translateX(0) scale(1) rotateZ(0);opacity:1;}
 }
 
 @media(max-width:900px){
@@ -794,7 +796,12 @@ body.fullViewMode .guitarWrap{
   width:min(72vw,760px);
   height:min(96vh,1120px);
   animation:none;
-  transform:none !important;
+  transform:translate3d(0,0,0) scale(1);
+  cursor:grab;
+}
+body.fullViewMode .guitarWrap.dragging,
+.vaultGuitarWrap.dragging{
+  cursor:grabbing;
 }
 body.fullViewMode #backFullViewBtn{display:block;}
 
@@ -939,7 +946,7 @@ body.fullViewMode .guitarWrap,
 .vaultScreen.vaultFullView .vaultName,
 .vaultScreen.vaultFullView #vaultEditBtn,
 .vaultScreen.vaultFullView #vaultDeleteBtn{display:none !important;}
-.vaultScreen.vaultFullView .vaultGuitarWrap{width:min(76vw,760px);height:min(92vh,1080px);}
+.vaultScreen.vaultFullView .vaultGuitarWrap{width:min(76vw,760px);height:min(92vh,1080px);cursor:grab;}
 .vaultScreen.vaultFullView .vaultArrow{opacity:.18;}
 .vaultScreen.vaultFullView .vaultArrow:hover{opacity:1;}
 .vaultControls{
@@ -961,13 +968,15 @@ body.fullViewMode .guitarWrap,
 }
 
 @keyframes vaultSwipeLeft{
-  0%{transform:translateX(22px) scale(.98);opacity:.35;}
-  100%{transform:translateX(0) scale(1);opacity:1;}
+  0%{transform:translateX(120px) scale(.92) rotateZ(1.5deg);opacity:0;}
+  65%{transform:translateX(-10px) scale(1.02) rotateZ(-.3deg);opacity:1;}
+  100%{transform:translateX(0) scale(1) rotateZ(0);opacity:1;}
 }
 
 @keyframes vaultSwipeRight{
-  0%{transform:translateX(-22px) scale(.98);opacity:.35;}
-  100%{transform:translateX(0) scale(1);opacity:1;}
+  0%{transform:translateX(-120px) scale(.92) rotateZ(-1.5deg);opacity:0;}
+  65%{transform:translateX(10px) scale(1.02) rotateZ(.3deg);opacity:1;}
+  100%{transform:translateX(0) scale(1) rotateZ(0);opacity:1;}
 }
 
 @media(max-width:900px){
@@ -1007,7 +1016,7 @@ body.fullViewMode .guitarWrap,
       <button class="secondary" id="resetBtn">RESET</button>
       <button class="secondary" id="fullViewBtn">FULL VIEW</button>
       <button class="secondary" id="saveBuildBtn">SAVE BUILD</button>
-      <button class="secondary" id="vaultBtn">SHRED VAULT</button>
+      <button class="secondary" id="vaultBtn">MY COLLECTION</button>
       <div class="hint">Modular builder: woods, inlays, bindings, pickups, rings and hardware are separate layers.</div>
     </div>
   </aside>
@@ -1047,7 +1056,7 @@ body.fullViewMode .guitarWrap,
 <div class="vaultScreen" id="vaultScreen">
   <div class="vaultTopbar">
     <div>
-      <h2>SHRED VAULT</h2>
+      <h2>MY COLLECTION</h2>
       <p>Your saved builds live here locally on this browser.</p>
     </div>
     <button id="closeVaultBtn" class="pillBtn">BACK TO BUILDER</button>
@@ -1584,27 +1593,51 @@ function exitFullView(){
 
 let stageZoom = 1;
 let vaultZoom = 1;
+let stagePanX = 0;
+let stagePanY = 0;
+let vaultPanX = 0;
+let vaultPanY = 0;
 let stagePinchStart = null;
 let vaultPinchStart = null;
+let stageDragStart = null;
+let vaultDragStart = null;
+
+function clampPan(value, zoom, limitBase){
+  const limit = Math.max(0, (zoom - 1) * limitBase);
+  return Math.max(-limit, Math.min(limit, value));
+}
 
 function applyStageZoom(){
-  guitarWrap.style.transform = `scale(${stageZoom})`;
+  stagePanX = clampPan(stagePanX, stageZoom, window.innerWidth * .55);
+  stagePanY = clampPan(stagePanY, stageZoom, window.innerHeight * .75);
+  guitarWrap.style.transform = `translate3d(${stagePanX}px, ${stagePanY}px, 0) scale(${stageZoom})`;
 }
 
 function resetStageZoom(){
   stageZoom = 1;
-  guitarWrap.classList.remove("zooming");
+  stagePanX = 0;
+  stagePanY = 0;
+  stagePinchStart = null;
+  stageDragStart = null;
+  guitarWrap.classList.remove("zooming", "dragging");
   guitarWrap.style.transform = "";
 }
 
 function applyVaultZoom(){
-  document.getElementById("vaultGuitarWrap").style.transform = `scale(${vaultZoom})`;
+  const wrap = document.getElementById("vaultGuitarWrap");
+  vaultPanX = clampPan(vaultPanX, vaultZoom, window.innerWidth * .55);
+  vaultPanY = clampPan(vaultPanY, vaultZoom, window.innerHeight * .75);
+  wrap.style.transform = `translate3d(${vaultPanX}px, ${vaultPanY}px, 0) scale(${vaultZoom})`;
 }
 
 function resetVaultZoom(){
   vaultZoom = 1;
+  vaultPanX = 0;
+  vaultPanY = 0;
+  vaultPinchStart = null;
+  vaultDragStart = null;
   const wrap = document.getElementById("vaultGuitarWrap");
-  wrap.classList.remove("zooming");
+  wrap.classList.remove("zooming", "dragging");
   wrap.style.transform = "";
 }
 
@@ -1614,30 +1647,65 @@ function pinchDistance(touches){
   return Math.hypot(dx, dy);
 }
 
+function pinchCenter(touches){
+  return {
+    x:(touches[0].clientX + touches[1].clientX) / 2,
+    y:(touches[0].clientY + touches[1].clientY) / 2
+  };
+}
+
 stage.addEventListener("touchstart", e => {
-  if(!isFullView || e.touches.length !== 2) return;
-  e.preventDefault();
-  guitarWrap.classList.add("zooming");
-  stagePinchStart = { distance: pinchDistance(e.touches), zoom: stageZoom };
+  if(!isFullView) return;
+  if(e.touches.length === 2){
+    e.preventDefault();
+    guitarWrap.classList.add("zooming");
+    const center = pinchCenter(e.touches);
+    stagePinchStart = { distance: pinchDistance(e.touches), zoom: stageZoom, panX: stagePanX, panY: stagePanY, x:center.x, y:center.y };
+    stageDragStart = null;
+  } else if(e.touches.length === 1 && stageZoom > 1){
+    e.preventDefault();
+    guitarWrap.classList.add("dragging");
+    stageDragStart = { x:e.touches[0].clientX, y:e.touches[0].clientY, panX:stagePanX, panY:stagePanY };
+  }
 }, {passive:false});
 
 stage.addEventListener("touchmove", e => {
-  if(!isFullView || !stagePinchStart || e.touches.length !== 2) return;
-  e.preventDefault();
-  const nextZoom = stagePinchStart.zoom * (pinchDistance(e.touches) / stagePinchStart.distance);
-  stageZoom = Math.max(1, Math.min(2.35, nextZoom));
-  applyStageZoom();
+  if(!isFullView) return;
+  if(stagePinchStart && e.touches.length === 2){
+    e.preventDefault();
+    const center = pinchCenter(e.touches);
+    const nextZoom = stagePinchStart.zoom * (pinchDistance(e.touches) / stagePinchStart.distance);
+    stageZoom = Math.max(1, Math.min(3.2, nextZoom));
+    stagePanX = stagePinchStart.panX + (center.x - stagePinchStart.x);
+    stagePanY = stagePinchStart.panY + (center.y - stagePinchStart.y);
+    applyStageZoom();
+  } else if(stageDragStart && e.touches.length === 1 && stageZoom > 1){
+    e.preventDefault();
+    stagePanX = stageDragStart.panX + (e.touches[0].clientX - stageDragStart.x);
+    stagePanY = stageDragStart.panY + (e.touches[0].clientY - stageDragStart.y);
+    applyStageZoom();
+  }
 }, {passive:false});
 
-stage.addEventListener("touchend", () => {
-  stagePinchStart = null;
-  guitarWrap.classList.remove("zooming");
+stage.addEventListener("touchend", e => {
+  if(e.touches.length === 0){
+    stagePinchStart = null;
+    stageDragStart = null;
+    guitarWrap.classList.remove("zooming", "dragging");
+    if(stageZoom <= 1.01) resetStageZoom();
+  }
 }, {passive:true});
 
 stage.addEventListener("wheel", e => {
   if(!isFullView) return;
   e.preventDefault();
-  stageZoom = Math.max(1, Math.min(2.35, stageZoom + (e.deltaY < 0 ? .08 : -.08)));
+  const prevZoom = stageZoom;
+  stageZoom = Math.max(1, Math.min(3.2, stageZoom + (e.deltaY < 0 ? .10 : -.10)));
+  if(stageZoom > 1 && prevZoom !== stageZoom){
+    const rect = stage.getBoundingClientRect();
+    stagePanX += (rect.width / 2 - (e.clientX - rect.left)) * .08;
+    stagePanY += (rect.height / 2 - (e.clientY - rect.top)) * .08;
+  }
   applyStageZoom();
 }, {passive:false});
 
@@ -1694,7 +1762,7 @@ function renderVault(){
   vaultDeleteBtn.style.display = hasBuilds ? "inline-block" : "none";
 
   if(!hasBuilds){
-    vaultName.textContent = "SHRED VAULT";
+    vaultName.textContent = "MY COLLECTION";
     return;
   }
 
@@ -1772,30 +1840,58 @@ vaultFullBtn.addEventListener("click", () => {
 });
 
 vaultScreen.addEventListener("touchstart", e => {
-  if(!vaultFullMode || e.touches.length !== 2) return;
-  e.preventDefault();
+  if(!vaultFullMode) return;
   const wrap = document.getElementById("vaultGuitarWrap");
-  wrap.classList.add("zooming");
-  vaultPinchStart = { distance: pinchDistance(e.touches), zoom: vaultZoom };
+  if(e.touches.length === 2){
+    e.preventDefault();
+    wrap.classList.add("zooming");
+    const center = pinchCenter(e.touches);
+    vaultPinchStart = { distance: pinchDistance(e.touches), zoom: vaultZoom, panX: vaultPanX, panY: vaultPanY, x:center.x, y:center.y };
+    vaultDragStart = null;
+  } else if(e.touches.length === 1 && vaultZoom > 1){
+    e.preventDefault();
+    wrap.classList.add("dragging");
+    vaultDragStart = { x:e.touches[0].clientX, y:e.touches[0].clientY, panX:vaultPanX, panY:vaultPanY };
+  }
 }, {passive:false});
 
 vaultScreen.addEventListener("touchmove", e => {
-  if(!vaultFullMode || !vaultPinchStart || e.touches.length !== 2) return;
-  e.preventDefault();
-  const nextZoom = vaultPinchStart.zoom * (pinchDistance(e.touches) / vaultPinchStart.distance);
-  vaultZoom = Math.max(1, Math.min(2.35, nextZoom));
-  applyVaultZoom();
+  if(!vaultFullMode) return;
+  if(vaultPinchStart && e.touches.length === 2){
+    e.preventDefault();
+    const center = pinchCenter(e.touches);
+    const nextZoom = vaultPinchStart.zoom * (pinchDistance(e.touches) / vaultPinchStart.distance);
+    vaultZoom = Math.max(1, Math.min(3.2, nextZoom));
+    vaultPanX = vaultPinchStart.panX + (center.x - vaultPinchStart.x);
+    vaultPanY = vaultPinchStart.panY + (center.y - vaultPinchStart.y);
+    applyVaultZoom();
+  } else if(vaultDragStart && e.touches.length === 1 && vaultZoom > 1){
+    e.preventDefault();
+    vaultPanX = vaultDragStart.panX + (e.touches[0].clientX - vaultDragStart.x);
+    vaultPanY = vaultDragStart.panY + (e.touches[0].clientY - vaultDragStart.y);
+    applyVaultZoom();
+  }
 }, {passive:false});
 
-vaultScreen.addEventListener("touchend", () => {
-  vaultPinchStart = null;
-  document.getElementById("vaultGuitarWrap").classList.remove("zooming");
+vaultScreen.addEventListener("touchend", e => {
+  if(e.touches.length === 0){
+    vaultPinchStart = null;
+    vaultDragStart = null;
+    document.getElementById("vaultGuitarWrap").classList.remove("zooming", "dragging");
+    if(vaultZoom <= 1.01) resetVaultZoom();
+  }
 }, {passive:true});
 
 vaultScreen.addEventListener("wheel", e => {
   if(!vaultFullMode) return;
   e.preventDefault();
-  vaultZoom = Math.max(1, Math.min(2.35, vaultZoom + (e.deltaY < 0 ? .08 : -.08)));
+  const prevZoom = vaultZoom;
+  vaultZoom = Math.max(1, Math.min(3.2, vaultZoom + (e.deltaY < 0 ? .10 : -.10)));
+  if(vaultZoom > 1 && prevZoom !== vaultZoom){
+    const rect = vaultScreen.getBoundingClientRect();
+    vaultPanX += (rect.width / 2 - (e.clientX - rect.left)) * .08;
+    vaultPanY += (rect.height / 2 - (e.clientY - rect.top)) * .08;
+  }
   applyVaultZoom();
 }, {passive:false});
 
