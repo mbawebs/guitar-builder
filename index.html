@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>Guitar Builder</title>
 
 <style>
@@ -709,6 +709,17 @@ button.secondary{
     height:92vh;
     transform:translateX(-8vw);
   }
+}
+  html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  touch-action: manipulation;
+  overscroll-behavior: none;
+}
+
+* {
+  box-sizing: border-box;
 }
 </style>
 </head>
