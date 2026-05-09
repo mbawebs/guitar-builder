@@ -741,6 +741,9 @@ button.secondary{
     <div class="footer">
       <button id="randomBtn">RANDOMIZE BUILD</button>
       <button class="secondary" id="resetBtn">RESET</button>
+      <button class="secondary" id="fullViewBtn">
+    FULL VIEW
+  </button>
       <div class="hint">Modular builder: woods, inlays, bindings, pickups, rings and hardware are separate layers.</div>
     </div>
   </aside>
@@ -1236,6 +1239,40 @@ document.querySelector(".stage").addEventListener("mouseleave", ()=>{
 buildTabs();
 buildControls();
 render();
+  const fullViewBtn = document.getElementById("fullViewBtn");
+const sidebar = document.querySelector(".sidebar");
+const stage = document.querySelector(".stage");
+
+let isFullView = false;
+
+fullViewBtn.addEventListener("click", () => {
+
+  isFullView = !isFullView;
+
+  if(isFullView){
+
+    sidebar.style.display = "none";
+
+    stage.style.width = "100vw";
+    stage.style.maxWidth = "100vw";
+
+    guitarWrap.style.transform = "scale(1.15)";
+
+    fullViewBtn.innerText = "BACK TO EDITOR";
+
+  } else {
+
+    sidebar.style.display = "";
+
+    stage.style.width = "";
+    stage.style.maxWidth = "";
+
+    guitarWrap.style.transform = "";
+
+    fullViewBtn.innerText = "FULL VIEW";
+  }
+
+});
 </script>
 </body>
 </html>
