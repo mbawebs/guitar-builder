@@ -721,21 +721,7 @@ button.secondary{
 * {
   box-sizing: border-box;
 }
-  .backFullViewBtn {
-  display: none;
-  position: fixed;
-  top: 18px;
-  right: 18px;
-  z-index: 9999;
-  padding: 12px 16px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.25);
-  background: rgba(0,0,0,.75);
-  color: #fff;
-  font-weight: 900;
-  letter-spacing: .8px;
-  cursor: pointer;
-}
+
 </style>
 </head>
 
@@ -1293,6 +1279,17 @@ fullViewBtn.addEventListener("click", () => {
     fullViewBtn.innerText = "FULL VIEW";
   }
 
+});
+  backFullViewBtn.addEventListener("click", () => {
+  isFullView = false;
+
+  sidebar.style.display = "";
+  stage.style.width = "";
+  stage.style.maxWidth = "";
+  guitarWrap.style.transform = "";
+
+  fullViewBtn.innerText = "FULL VIEW";
+  backFullViewBtn.style.display = "none";
 });
 </script>
 </body>
