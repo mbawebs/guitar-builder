@@ -309,6 +309,13 @@ body:before{
 .swatch.maple24,.swatch.maple22{background:#d8b06c}
 .swatch.rose24,.swatch.rose22{background:#5b2f22}
 .swatch.ebony24,.swatch.ebony22{background:#111}
+.swatch.roasted24,.swatch.roasted22{background:#8b4f28}
+.swatch.natural{background:#d8b06c}
+.swatch.binding-white{background:#f5f2df}
+.swatch.dots-white,.swatch.shark-white{background:#f5f5ee}
+.swatch.dots-black,.swatch.shark-black{background:#050505}
+.swatch.zebra{background:linear-gradient(180deg,#eee4cf 0 50%,#050505 50%)}
+.swatch.zebra-rev{background:linear-gradient(180deg,#050505 0 50%,#eee4cf 50%)}
 .swatch.none{background:repeating-linear-gradient(45deg,#202736,#202736 4px,#333d52 4px,#333d52 8px)}
 
 .toggleRow{
@@ -515,6 +522,8 @@ button.secondary{
 
 .layer-body{z-index:10}
 .layer-neck{z-index:20}
+.layer-binding{z-index:22}
+.layer-inlays{z-index:23}
 .layer-headstock{z-index:25}
 .layer-nut{z-index:28}
 .layer-ring-neck{z-index:40}
@@ -721,7 +730,7 @@ button.secondary{
     <div class="footer">
       <button id="randomBtn">RANDOMIZE BUILD</button>
       <button class="secondary" id="resetBtn">RESET</button>
-      <div class="hint">Game-style UI upgrade. Rings are now separate layers: neck, middle, bridge.</div>
+      <div class="hint">Modular builder: woods, inlays, bindings, pickups, rings and hardware are separate layers.</div>
     </div>
   </aside>
 
@@ -735,6 +744,8 @@ button.secondary{
     <div class="guitarWrap" id="guitarWrap">
       <img class="guitarLayer layer-body hidden" data-layer="body">
       <img class="guitarLayer layer-neck hidden" data-layer="neck">
+      <img class="guitarLayer layer-binding hidden" data-layer="binding">
+      <img class="guitarLayer layer-inlays hidden" data-layer="inlays">
       <img class="guitarLayer layer-headstock hidden" data-layer="headstock">
       <img class="guitarLayer layer-nut hidden" data-layer="nut">
 
@@ -779,13 +790,35 @@ const CATALOG = {
     {id:"maple24",label:"Maple 24 Fret",src:paths("neck","San-Dimas_0007s_0001s_0000_Hotrod-Maple-24-neck")},
     {id:"rose24",label:"Rosewood 24 Fret",src:paths("neck","San-Dimas_0007s_0001s_0001_Hotrod-Rosewood-24-neck")},
     {id:"ebony24",label:"Ebony 24 Fret",src:paths("neck","San-Dimas_0007s_0001s_0002_Hotrod-Ebony-24-neck")},
+    {id:"roasted24",label:"Roasted Maple 24 Fret",src:paths("neck","roasted_maple_24")},
     {id:"maple22",label:"Maple 22 Fret",src:paths("neck","San-Dimas_0007s_0000s_0000_Hotrod-Maple-22-neck")},
     {id:"rose22",label:"Rosewood 22 Fret",src:paths("neck","San-Dimas_0007s_0000s_0001_Hotrod-Rosewood-22-neck")},
-    {id:"ebony22",label:"Ebony 22 Fret",src:paths("neck","San-Dimas_0007s_0000s_0002_Hotrod-Ebony-22-neck")}
+    {id:"ebony22",label:"Ebony 22 Fret",src:paths("neck","San-Dimas_0007s_0000s_0002_Hotrod-Ebony-22-neck")},
+    {id:"roasted22",label:"Roasted Maple 22 Fret",src:paths("neck","roasted_maple_22")}
+  ],
+
+  binding:[
+    {id:"none",label:"Binding OFF",src:""},
+    {id:"binding-white-24",label:"White Binding 24 Fret",src:paths("binding","white_binding 24")},
+    {id:"binding-white-22",label:"White Binding 22 Fret",src:paths("binding","white_binding 22")}
+  ],
+
+  inlays:[
+    {id:"none",label:"Inlays OFF",src:""},
+    {id:"white-dots-24",label:"White Dots 24 Fret",src:paths("inlays","white_dots_24")},
+    {id:"black-dots-24",label:"Black Dots 24 Fret",src:paths("inlays","black_dots 24")},
+    {id:"white-dots-22",label:"White Dots 22 Fret",src:paths("inlays","white_dots_22")},
+    {id:"black-dots-22",label:"Black Dots 22 Fret",src:paths("inlays","black_dots 22")},
+    {id:"shark-white",label:"White Sharkfin",src:paths("inlays","sharkfin_white")},
+    {id:"shark-white-rev",label:"White Reverse Sharkfin",src:paths("inlays","sharkfin_white_reverse")},
+    {id:"shark-black",label:"Black Sharkfin",src:paths("inlays","sharkfin_black")},
+    {id:"shark-black-rev",label:"Black Reverse Sharkfin",src:paths("inlays","sharkfin_black_reverse")}
   ],
 
   headstock:[
-    {id:"natural",label:"Natural Headstock",src:paths("headstock","San-Dimas_0007s_0000_Hotrod-headstock-natural")}
+    {id:"natural",label:"Natural Headstock",src:paths("headstock","San-Dimas_0007s_0000_Hotrod-headstock-natural")},
+    {id:"black",label:"Black Headstock",src:paths("headstock","black_headstock")},
+    {id:"roasted",label:"Roasted Maple Headstock",src:paths("headstock","roasted_maple")}
   ],
 
   nut:[
@@ -797,19 +830,31 @@ const CATALOG = {
   pickupNeck:[
     {id:"none",label:"No Neck Pickup",src:""},
     {id:"black",label:"Neck HB Black",src:paths("pickups","San-Dimas_0006s_0000_Hotrod-HB-neck-black")},
-    {id:"white",label:"Neck HB White",src:paths("pickups","San-Dimas_0005s_0000_Hotrod-HB-neck-white")}
+    {id:"white",label:"Neck HB White",src:paths("pickups","San-Dimas_0005s_0000_Hotrod-HB-neck-white")},
+    {id:"single-black",label:"Neck Single Coil Black",src:paths("pickups","singlecoil_neck_black")},
+    {id:"single-white",label:"Neck Single Coil White",src:paths("pickups","singlecoil_neck_white")},
+    {id:"zebra",label:"Neck Zebra HB",src:paths("pickups","humbucker_zebra_neck_classic")},
+    {id:"zebra-rev",label:"Neck Reverse Zebra HB",src:paths("pickups","humbucker_zebra_neck_reverse")}
   ],
 
   pickupMiddle:[
     {id:"none",label:"No Middle Pickup",src:""},
     {id:"black",label:"Middle HB Black",src:paths("pickups","San-Dimas_0006s_0001_Hotrod-HB-middle-black")},
-    {id:"white",label:"Middle HB White",src:paths("pickups","San-Dimas_0005s_0001_Hotrod-HB-middle-white")}
+    {id:"white",label:"Middle HB White",src:paths("pickups","San-Dimas_0005s_0001_Hotrod-HB-middle-white")},
+    {id:"single-black",label:"Middle Single Coil Black",src:paths("pickups","singlecoil_middle_black")},
+    {id:"single-white",label:"Middle Single Coil White",src:paths("pickups","singlecoil_middle_white")},
+    {id:"zebra",label:"Middle Zebra HB",src:paths("pickups","humbucker_zebra_middle_classic")},
+    {id:"zebra-rev",label:"Middle Reverse Zebra HB",src:paths("pickups","humbucker_zebra_middle_reverse")}
   ],
 
   pickupBridge:[
     {id:"none",label:"No Bridge Pickup",src:""},
     {id:"black",label:"Bridge HB Black",src:paths("pickups","San-Dimas_0006s_0002_Hotrod-HB-Bridge-black")},
-    {id:"white",label:"Bridge HB White",src:paths("pickups","San-Dimas_0005s_0002_Hotrod-HB-Bridge-white")}
+    {id:"white",label:"Bridge HB White",src:paths("pickups","San-Dimas_0005s_0002_Hotrod-HB-Bridge-white")},
+    {id:"single-black",label:"Bridge Single Coil Black",src:paths("pickups","singlecoil_bridge_black")},
+    {id:"single-white",label:"Bridge Single Coil White",src:paths("pickups","singlecoil_bridge_white")},
+    {id:"zebra",label:"Bridge Zebra HB",src:paths("pickups","humbucker_zebra_bridge_classic")},
+    {id:"zebra-rev",label:"Bridge Reverse Zebra HB",src:paths("pickups","humbucker_zebra_bridge_reverse")}
   ],
 
   ringNeck:[
@@ -844,13 +889,17 @@ const CATALOG = {
     {id:"fr-gold",label:"Floyd Rose Gold",src:paths("bridge","San-Dimas_0003s_0001_Hotrod-FR-hardware-gold")},
     {id:"vt-black",label:"Vintage Trem Black",src:paths("bridge","San-Dimas_0003s_0004_Hotrod-VT-black")},
     {id:"vt-chrome",label:"Vintage Trem Chrome",src:paths("bridge","San-Dimas_0003s_0002_Hotrod-VT-chrome")},
-    {id:"vt-gold",label:"Vintage Trem Gold",src:paths("bridge","San-Dimas_0003s_0000_Hotrod-VT-Gold")}
+    {id:"vt-gold",label:"Vintage Trem Gold",src:paths("bridge","San-Dimas_0003s_0000_Hotrod-VT-Gold")},
+    {id:"fixed-black",label:"Fixed Bridge Black",src:paths("bridge","fixed_bridge_black")},
+    {id:"fixed-chrome",label:"Fixed Bridge Chrome",src:paths("bridge","fixed_bridge_chrome")},
+    {id:"fixed-gold",label:"Fixed Bridge Gold",src:paths("bridge","fixed_bridge_gold")}
   ],
 
   knobs:[
     {id:"black",label:"Black Speed Knobs",src:paths("knobs","San-Dimas_0002s_0002_Hotrod-speed-knobs-black")},
     {id:"chrome",label:"Chrome Speed Knobs",src:paths("knobs","San-Dimas_0002s_0000_Hotrod-speed-knobs-chrome")},
-    {id:"gold",label:"Gold Speed Knobs",src:paths("knobs","San-Dimas_0002s_0001_Hotrod-speed-knobs-gold")}
+    {id:"gold",label:"Gold Speed Knobs",src:paths("knobs","San-Dimas_0002s_0001_Hotrod-speed-knobs-gold")},
+    {id:"white",label:"White Speed Knobs",src:paths("knobs","speed_knobs_white")}
   ],
 
   switch:[
@@ -863,6 +912,8 @@ const CATALOG = {
 const DEFAULT_STATE = {
   body:"white",
   neck:"maple24",
+  binding:"none",
+  inlays:"white-dots-24",
   headstock:"natural",
   nut:"black",
   pickupNeck:"black",
@@ -878,6 +929,8 @@ const DEFAULT_STATE = {
   visible:{
     body:true,
     neck:true,
+    binding:false,
+    inlays:true,
     headstock:false,
     nut:true,
     pickupNeck:true,
@@ -897,6 +950,7 @@ let activeGroup = "core";
 
 const groups = [
   {id:"core",label:"🎸 CORE"},
+  {id:"neck",label:"🪵 NECK"},
   {id:"pickups",label:"⚡ PICKUPS"},
   {id:"rings",label:"💍 RINGS"},
   {id:"hardware",label:"🔩 HARDWARE"}
@@ -904,9 +958,13 @@ const groups = [
 
 const sections = [
   ["body","BODY","Body colors",false,true,"core"],
-  ["neck","NECK","22 / 24 fret necks",false,true,"core"],
-  ["headstock","NATURAL HEADSTOCK","Independent ON/OFF",true,false,"core"],
-  ["nut","NUT","Locking nut options",true,false,"core"],
+  ["bridge","BRIDGE","FR / VT / Fixed bridge",false,true,"core"],
+
+  ["neck","NECK WOOD","22 / 24 fret necks",false,true,"neck"],
+  ["binding","BINDING","Neck binding ON/OFF",true,true,"neck"],
+  ["inlays","INLAYS","Dots / sharkfins / clean board",true,true,"neck"],
+  ["headstock","HEADSTOCK","Natural / black / roasted",true,true,"neck"],
+  ["nut","NUT","Locking nut options",true,false,"neck"],
 
   ["pickupNeck","NECK PICKUP","Independent ON/OFF",true,true,"pickups"],
   ["pickupMiddle","MIDDLE PICKUP","Independent ON/OFF",true,true,"pickups"],
@@ -916,8 +974,7 @@ const sections = [
   ["ringMiddle","MIDDLE RING","Independent ON/OFF",true,true,"rings"],
   ["ringBridge","BRIDGE RING","Independent ON/OFF",true,true,"rings"],
 
-  ["bridge","BRIDGE","FR / VT hardware",false,true,"hardware"],
-  ["knobs","KNOBS","Speed knobs",false,false,"hardware"],
+  ["knobs","KNOBS","Speed knobs",false,true,"hardware"],
   ["switch","SWITCH","Blade switch colors",false,false,"hardware"]
 ];
 
@@ -965,9 +1022,18 @@ function render(){
 function swatchClass(id){
   if(id.includes("fr-")) return id.replace("fr-","");
   if(id.includes("vt-")) return id.replace("vt-","");
+  if(id.includes("fixed-")) return id.replace("fixed-","");
+  if(id.includes("roasted")) return id.includes("24") ? "roasted24" : "roasted22";
   if(id.includes("maple")) return id;
   if(id.includes("rose")) return id;
   if(id.includes("ebony")) return id;
+  if(id.includes("binding-white")) return "binding-white";
+  if(id.includes("white-dots")) return "dots-white";
+  if(id.includes("black-dots")) return "dots-black";
+  if(id.includes("shark-white")) return "shark-white";
+  if(id.includes("shark-black")) return "shark-black";
+  if(id === "zebra") return "zebra";
+  if(id === "zebra-rev") return "zebra-rev";
   return id;
 }
 
@@ -1121,6 +1187,8 @@ document.getElementById("randomBtn").onclick = ()=>{
     }
   });
 
+  state.visible.binding = Math.random() > .55;
+  state.visible.inlays = Math.random() > .2;
   state.visible.headstock = Math.random() > .5;
   state.visible.nut = true;
   state.visible.pickupNeck = Math.random() > .15;
