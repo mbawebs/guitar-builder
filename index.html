@@ -1100,6 +1100,57 @@ body.fullViewMode .guitarWrap,
 </div>
 
 <script>
+  function preserveOptionsScroll(callback) {
+  const panel =
+    document.querySelector(".options-panel") ||
+    document.querySelector("#optionsPanel") ||
+    document.querySelector(".controls") ||
+    document.querySelector("#controls");
+
+  const scrollTop = panel ? panel.scrollTop : 0;
+
+  callback();
+
+  requestAnimationFrame(() => {
+    if (panel) panel.scrollTop = scrollTop;
+  });
+}
+
+document.addEventListener("click", (e) => {
+  const panel =
+    document.querySelector(".options-panel") ||
+    document.querySelector("#optionsPanel") ||
+    document.querySelector(".controls") ||
+    document.querySelector("#controls");
+
+  if (!panel) return;
+  if (!panel.contains(e.target)) return;
+
+  const savedScroll = panel.scrollTop;
+
+  requestAnimationFrame(() => {
+    panel.scrollTop = savedScroll;
+
+    setTimeout(() => {
+      panel.scrollTop = savedScroll;
+    }, 0);
+  });
+}, true);
+  function preserveOptionsScroll(callback) {
+  const panel =
+    document.querySelector(".options-panel") ||
+    document.querySelector("#optionsPanel") ||
+    document.querySelector(".controls") ||
+    document.querySelector("#controls");
+
+  const scrollTop = panel ? panel.scrollTop : 0;
+
+  callback();
+
+  requestAnimationFrame(() => {
+    if (panel) panel.scrollTop = scrollTop;
+  });
+}
 function paths(folder, file){
   return [
     `${folder}/${file}.png`,
