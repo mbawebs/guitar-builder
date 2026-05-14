@@ -3,7 +3,13 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Guitar Builder</title>
+<title>ShredLab Guitar Builder</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#111111">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ShredLab">
+<link rel="apple-touch-icon" href="icon-192.png">
 
 <style>
 :root{
@@ -143,6 +149,8 @@ body:before{
 .controls{
   padding:14px;
   overflow:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
 }
 
 .controls::-webkit-scrollbar{width:8px}
@@ -1017,7 +1025,7 @@ body.fullViewMode .guitarWrap,
       <button class="secondary" id="fullViewBtn">FULL VIEW</button>
       <button class="secondary" id="saveBuildBtn">SAVE BUILD</button>
       <button class="secondary" id="vaultBtn">MY COLLECTION</button>
-      <div class="hint">Modular builder: woods, inlays, bindings, pickups, rings and hardware are separate layers.</div>
+      <div class="hint">Builds are saved locally on this device. Clearing browser/site data may remove saved builds.</div>
     </div>
   </aside>
 
@@ -1057,7 +1065,7 @@ body.fullViewMode .guitarWrap,
   <div class="vaultTopbar">
     <div>
       <h2>MY COLLECTION</h2>
-      <p>Your saved builds live here locally on this browser.</p>
+      <p>Your saved builds live locally on this browser/device. Clearing browser or site data may remove them.</p>
     </div>
     <button id="closeVaultBtn" class="pillBtn">BACK TO BUILDER</button>
   </div>
@@ -1100,57 +1108,50 @@ body.fullViewMode .guitarWrap,
 </div>
 
 <script>
-  function preserveOptionsScroll(callback) {
-  const panel =
-    document.querySelector(".options-panel") ||
-    document.querySelector("#optionsPanel") ||
-    document.querySelector(".controls") ||
-    document.querySelector("#controls");
+const controlsEl = document.getElementById("controls");
+let lastControlsScrollTop = 0;
 
-  const scrollTop = panel ? panel.scrollTop : 0;
-
-  callback();
-
-  requestAnimationFrame(() => {
-    if (panel) panel.scrollTop = scrollTop;
-  });
+function rememberControlsScroll(){
+  if(controlsEl){
+    lastControlsScrollTop = controlsEl.scrollTop;
+  }
 }
 
-document.addEventListener("click", (e) => {
-  const panel =
-    document.querySelector(".options-panel") ||
-    document.querySelector("#optionsPanel") ||
-    document.querySelector(".controls") ||
-    document.querySelector("#controls");
+function restoreControlsScroll(scrollTop = lastControlsScrollTop){
+  if(!controlsEl) return;
 
-  if (!panel) return;
-  if (!panel.contains(e.target)) return;
+  const restore = () => {
+    controlsEl.scrollTop = scrollTop;
+  };
 
-  const savedScroll = panel.scrollTop;
-
+  restore();
   requestAnimationFrame(() => {
-    panel.scrollTop = savedScroll;
-
-    setTimeout(() => {
-      panel.scrollTop = savedScroll;
-    }, 0);
+    restore();
+    requestAnimationFrame(restore);
   });
-}, true);
-  function preserveOptionsScroll(callback) {
-  const panel =
-    document.querySelector(".options-panel") ||
-    document.querySelector("#optionsPanel") ||
-    document.querySelector(".controls") ||
-    document.querySelector("#controls");
 
-  const scrollTop = panel ? panel.scrollTop : 0;
-
-  callback();
-
-  requestAnimationFrame(() => {
-    if (panel) panel.scrollTop = scrollTop;
-  });
+  setTimeout(restore, 0);
+  setTimeout(restore, 60);
+  setTimeout(restore, 160);
 }
+
+function preserveOptionsScroll(callback){
+  rememberControlsScroll();
+  const savedScroll = lastControlsScrollTop;
+  const result = callback();
+  restoreControlsScroll(savedScroll);
+  return result;
+}
+
+/* Keeps the options panel from jumping to the top after selecting items on mobile/desktop */
+["pointerdown", "touchstart", "mousedown", "click", "change"].forEach(eventName => {
+  document.addEventListener(eventName, (event) => {
+    if(controlsEl && controlsEl.contains(event.target)){
+      rememberControlsScroll();
+    }
+  }, true);
+});
+
 function paths(folder, file){
   return [
     `${folder}/${file}.png`,
@@ -1434,9 +1435,11 @@ function buildTabs(){
     btn.className = "tabBtn" + (activeGroup === group.id ? " active" : "");
     btn.textContent = group.label;
     btn.onclick = ()=>{
-      activeGroup = group.id;
-      buildTabs();
-      buildControls();
+      preserveOptionsScroll(() => {
+        activeGroup = group.id;
+        buildTabs();
+        buildControls(false);
+      });
     };
     tabs.appendChild(btn);
   });
@@ -1470,34 +1473,17 @@ function buildOptionCards(cat, body){
     card.appendChild(meta);
 
     card.onclick = ()=>{
-  const controlsBox = document.getElementById("controls");
-  const savedPanelScroll = controlsBox.scrollTop;
-  const savedPageScroll = window.scrollY || document.documentElement.scrollTop || 0;
+      preserveOptionsScroll(() => {
+        state[cat] = opt.id;
 
-  state[cat] = opt.id;
+        if(opt.id !== "none"){
+          state.visible[cat] = true;
+        }
 
-  if(opt.id !== "none"){
-    state.visible[cat] = true;
-  }
-
-  setLayer(cat);
-  buildControls();
-
-requestAnimationFrame(()=>{
-  if(controlsBox){
-    controlsBox.scrollTop = savedPanelScroll;
-  }
-
-  window.scrollTo(0, savedPageScroll);
-
-  setTimeout(()=>{
-    if(controlsBox){
-      controlsBox.scrollTop = savedPanelScroll;
-    }
-    window.scrollTo(0, savedPageScroll);
-  }, 50);
-});
-};
+        setLayer(cat);
+        buildControls(true);
+      });
+    };
 
     grid.appendChild(card);
   });
@@ -1505,8 +1491,9 @@ requestAnimationFrame(()=>{
   body.appendChild(grid);
 }
 
-function buildControls(){
+function buildControls(keepScroll = false){
   const box = document.getElementById("controls");
+  const savedScroll = keepScroll ? box.scrollTop : 0;
   box.innerHTML = "";
 
   sections.filter(section=>section[5] === activeGroup).forEach(([cat,title,sub,hasToggle,open])=>{
@@ -1542,9 +1529,11 @@ function buildControls(){
       const text = row.querySelector(".toggleText");
 
       input.onchange = ()=>{
-        state.visible[cat] = input.checked;
-        text.textContent = input.checked ? "ON" : "OFF";
-        setLayer(cat);
+        preserveOptionsScroll(() => {
+          state.visible[cat] = input.checked;
+          text.textContent = input.checked ? "ON" : "OFF";
+          setLayer(cat);
+        });
       };
 
       body.appendChild(row);
@@ -1558,12 +1547,18 @@ function buildControls(){
     buildOptionCards(cat, body);
 
     sec.querySelector(".sectionHead").onclick = ()=>{
-      sec.classList.toggle("open");
-      body.style.display = sec.classList.contains("open") ? "grid" : "none";
+      preserveOptionsScroll(() => {
+        sec.classList.toggle("open");
+        body.style.display = sec.classList.contains("open") ? "grid" : "none";
+      });
     };
 
     box.appendChild(sec);
   });
+
+  if(keepScroll){
+    restoreControlsScroll(savedScroll);
+  }
 }
 
 document.getElementById("resetBtn").onclick = ()=>{
@@ -1593,7 +1588,7 @@ document.getElementById("randomBtn").onclick = ()=>{
   state.visible.ringMiddle = Math.random() > .25;
   state.visible.ringBridge = Math.random() > .25;
 
-  buildControls();
+  buildControls(true);
   render();
 };
 
